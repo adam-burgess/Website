@@ -1,0 +1,138 @@
+/* Styles for the body of a post (everything inside .prose).
+   These aren't scoped like component styles, because the HTML comes from your
+   Markdown, not from a component. Loaded by Piece.astro only. */
+
+.piece {
+  --measure: 680px;      /* reading column */
+  --wide: 680px;         /* figures, code and tables */
+}
+.piece.notes { --wide: 880px; }  /* Field Notes let figures and code run wider */
+
+/* Every block sits in the reading column... */
+.prose > * { max-width: var(--measure); margin-inline: auto; }
+/* ...except these, which can use the wider track. */
+.prose > figure,
+.prose > pre,
+.prose > table,
+.prose > .wide,
+.prose > .katex-display { max-width: var(--wide); }
+
+/* ---------- Text ---------- */
+.prose {
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.7;
+}
+.piece.notes .prose { font-size: 19px; }
+.prose p { margin-block: 0 1.25em; }   /* space between paragraphs, no indents */
+
+.prose h2, .prose h3, .prose h4 {
+  font-family: var(--sans); font-weight: 600; line-height: 1.25;
+  margin-block: 2em 0.6em;
+}
+.prose h2 { font-size: 26px; }
+.prose h3 { font-size: 21px; }
+.prose h4 { font-size: 18px; }
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.prose a:hover { text-decoration-thickness: 2px; }
+
+.prose ul, .prose ol { padding-left: 1.3em; margin-block: 0 1.25em; }
+.prose li { margin-block: 0.3em; }
+.prose li::marker { color: var(--ink-3); }
+
+/* Blockquote: left rule, not italics. */
+.prose blockquote {
+  margin-block: 1.6em;
+  padding: 0 0 0 22px;
+  border-left: 3px solid var(--accent);
+  color: var(--ink-2);
+}
+.prose blockquote p:last-child { margin-bottom: 0; }
+
+/* Section break: a line of *** or --- in Markdown becomes a centred mark. */
+.prose hr { border: 0; margin-block: 2.4em; text-align: center; }
+.prose hr::after {
+  content: '· · ·';
+  font-family: var(--serif); font-size: 22px; letter-spacing: 0.5em; color: var(--ink-3);
+}
+
+/* ---------- Figures ---------- */
+.prose img { display: block; max-width: 100%; height: auto; margin-inline: auto; border-radius: 3px; }
+.prose > p > img { margin-block: 1.6em; }        /* uncaptioned image */
+.prose figure { margin-block: 2em; }
+.prose figcaption {
+  margin-top: 10px;
+  font-family: var(--sans); font-size: 14px; line-height: 1.5; color: var(--ink-3);
+  text-align: center;
+}
+
+/* ---------- Code ---------- */
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.82em;
+}
+/* Inline `code` */
+.prose :not(pre) > code {
+  padding: 0.12em 0.36em;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ground) 88%, var(--ink));
+}
+/* Code blocks (coloured by Shiki at build time) */
+.prose pre {
+  margin-block: 1.6em;
+  padding: 18px 20px;
+  overflow-x: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.prose pre code { font-size: inherit; }
+
+/* Shiki writes both themes' colours as variables; switch to dark with the OS. */
+@media (prefers-color-scheme: dark) {
+  .prose .astro-code,
+  .prose .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+  }
+}
+
+/* ---------- Maths ---------- */
+.prose .katex { font-size: 1.05em; }
+.prose .katex-display {
+  margin-block: 1.4em;
+  overflow-x: auto;        /* long equations scroll instead of breaking the page */
+  overflow-y: hidden;
+  padding-block: 4px;
+}
+
+/* ---------- Tables ---------- */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: 1.6em;
+  font-family: var(--sans); font-size: 15px; line-height: 1.5;
+}
+.prose th, .prose td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--hairline); text-align: left; }
+.prose th {
+  font-family: var(--mono); font-weight: 400; font-size: 11px;
+  letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-3);
+}
+
+/* ---------- Footnotes ([^1] in Markdown) ---------- */
+.prose .footnotes { margin-top: 3em; font-size: 16px; color: var(--ink-2); }
+.prose .footnotes h2 { font-size: 13px; font-family: var(--mono); font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; }
+.prose sup a { text-decoration: none; }
+
+@media (max-width: 640px) {
+  .prose { font-size: 18.5px; }
+  .piece.notes .prose { font-size: 18px; }
+  .prose pre { font-size: 14px; padding: 14px 16px; }
+}

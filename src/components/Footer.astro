@@ -6,11 +6,9 @@ const year = new Date().getFullYear();
   <div class="wrap">
     <div>© {year} Adam Jumari Burgess · Perth, Western Australia</div>
     <div class="links">
-      <a href="mailto:adam@jumari.com.au">Email</a>
-      <a href="#">GitHub</a>
       <a href="#">LinkedIn</a>
-      <a href="#">RSS</a>
     </div>
+    <p class="disclaimer">This website was built with the help of AI. All words are written, edited and finalised by me.</p>
   </div>
 </footer>
 
@@ -26,4 +24,6 @@ const year = new Date().getFullYear();
   a { color: var(--ink-2); text-decoration: none; }
   a:hover { color: var(--accent); }
   .links { display: flex; gap: 20px; flex-wrap: wrap; }
+  /* flex-basis 100% puts the disclaimer on its own line under the © row. */
+  .disclaimer { flex-basis: 100%; margin: 0; }
 </style>

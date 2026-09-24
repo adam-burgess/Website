@@ -1,0 +1,18 @@
+---
+// One Off the Bench page. URL: /off-the-bench/<post name>/
+// getStaticPaths runs at build time and makes one page per post.
+import { render } from 'astro:content';
+import Piece from '../../layouts/Piece.astro';
+import { getPosts } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts('bench');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+<Piece post={post}>
+  <Content />
+</Piece>

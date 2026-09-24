@@ -1,0 +1,73 @@
+---
+// The page every post sits in. Off the Bench pieces get a Substack-style reading
+// column; Field Notes share it but let figures and code run a little wider.
+import Base from './Base.astro';
+import { SECTIONS, longDate, readingTime, type Post } from '../lib/posts';
+import 'katex/dist/katex.min.css';
+import '../styles/prose.css';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, date, updated, tags, draft } = post.data;
+const section = SECTIONS[post.collection];
+---
+<Base title={title} description={description}>
+  <article class:list={['piece', post.collection]}>
+    <header>
+      <p class="eyebrow">
+        <a href={section.path}>{section.name}</a>
+        {tags.length > 0 && <span> · {tags.join(' · ')}</span>}
+        {draft && <span class="draft"> · Draft</span>}
+      </p>
+      <h1>{title}</h1>
+      <p class="subtitle">{description}</p>
+      <p class="byline">
+        <span>Adam Jumari Burgess</span>
+        <time datetime={date.toISOString()}>{longDate(date)}</time>
+        <span>{readingTime(post.body)}</span>
+        {updated && <span>Updated {longDate(updated)}</span>}
+      </p>
+    </header>
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    <footer class="back">
+      <a href={section.path}>← All {section.name}</a>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .piece { padding-inline: 24px; padding-block: 54px 0; }
+  header, .back { max-width: var(--measure); margin-inline: auto; }
+
+  .eyebrow a { color: inherit; text-decoration: none; }
+  .eyebrow a:hover { color: var(--accent); }
+  .draft { color: var(--accent); }
+
+  h1 {
+    margin: 14px 0 12px;
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(32px, 5vw, 44px); line-height: 1.12; letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  .subtitle { margin: 0; font-family: var(--serif); font-size: 21px; line-height: 1.45; color: var(--ink-2); }
+
+  .byline {
+    display: flex; flex-wrap: wrap; gap: 4px 18px;
+    margin: 26px 0 0; padding-block: 12px;
+    border-block: 1px solid var(--hairline);
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.02em; color: var(--ink-3);
+  }
+  .byline span:first-child { color: var(--ink); }
+
+  .prose { margin-top: 36px; }
+
+  .back { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--hairline); font-size: 14px; }
+  .back a { text-decoration: none; }
+</style>

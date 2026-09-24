@@ -1,20 +1,21 @@
 ---
 // Wordmark + main navigation. Highlights the section you're in.
 const links = [
-  { href: '/essays/', label: 'Essays' },
+  { href: '/',        label: 'Home' },
+  { href: '/off-the-bench/', label: 'Off the Bench' },
   { href: '/notes/',  label: 'Field Notes' },
-  { href: '/resume/', label: 'Resume' },
-  { href: '/about/',  label: 'About' },
 ];
 
 const path = Astro.url.pathname;
+// Every path starts with '/', so Home only counts as current on the homepage itself.
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 <header class="masthead">
   <div class="wrap">
     <a class="wordmark" href="/">jumari<span>.com.au</span></a>
     <nav aria-label="Main">
       {links.map(({ href, label }) => (
-        <a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>{label}</a>
+        <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>
       ))}
     </nav>
   </div>

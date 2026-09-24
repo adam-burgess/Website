@@ -1,17 +1,17 @@
 ---
-// Field Notes section page. URL: /notes/
+// Off the Bench section page. URL: /off-the-bench/
 import Base from '../../layouts/Base.astro';
 import PostList from '../../components/PostList.astro';
 import { getPosts, SECTIONS } from '../../lib/posts';
 
-const section = SECTIONS.notes;
-const posts = await getPosts('notes');
+const section = SECTIONS.bench;
+const posts = await getPosts('bench');
 ---
-<Base title={section.name} description="Write-ups, guides and browser instruments from the bench — measurement, RF hardware, and the parts that went wrong first.">
+<Base title={section.name} description="Books I’m reading, opinion pieces, and the systems I use to get things done.">
   <section class="wrap">
-    <p class="eyebrow">Engineering</p>
+    <p class="eyebrow">Everything else</p>
     <h1>{section.name}</h1>
-    <p class="intro">Write-ups, guides and browser instruments from the bench — measurement, RF hardware, and the parts that went wrong first.</p>
+    <p class="intro">Books I’m reading, opinion pieces, and the systems I use to get things done.</p>
     <PostList posts={posts} />
   </section>
 </Base>

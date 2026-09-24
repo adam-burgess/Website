@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="360" viewBox="0 0 880 360">
+  <rect width="880" height="360" fill="#ffffff"/>
+  <g stroke="#d7dedf" stroke-width="1">
+    <line x1="60" y1="60" x2="60" y2="300"/>
+    <line x1="60" y1="300" x2="840" y2="300"/>
+    <line x1="60" y1="180" x2="840" y2="180" stroke-dasharray="4 6"/>
+  </g>
+  <path d="M60 180 C 120 60, 180 60, 240 180 S 360 300, 420 180 S 540 60, 600 180 S 720 300, 780 180 L 840 180"
+        fill="none" stroke="#0f6e76" stroke-width="3" stroke-linecap="round"/>
+  <g font-family="IBM Plex Mono, monospace" font-size="14" fill="#79868c">
+    <text x="66" y="52">|Γ|</text>
+    <text x="760" y="324">frequency →</text>
+  </g>
+</svg>

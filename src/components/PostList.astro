@@ -1,0 +1,47 @@
+---
+// A dated list of posts, used on the Field Notes and Off the Bench pages.
+import { postUrl, shortDate, type Post } from '../lib/posts';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+---
+{posts.length === 0 ? (
+  <p class="empty">Nothing here yet.</p>
+) : (
+  <ul>
+    {posts.map((post) => (
+      <li>
+        <a href={postUrl(post)}>
+          <span class="t">{post.data.title}{post.data.draft && <span class="draft"> (draft)</span>}</span>
+          <span class="d">{post.data.description}</span>
+          <time datetime={post.data.date.toISOString()}>{shortDate(post.data.date)}</time>
+        </a>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--hairline); }
+  li { border-bottom: 1px solid var(--hairline); }
+  a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 24px;
+    padding: 18px 0;
+    color: var(--ink); text-decoration: none;
+  }
+  .t { font-family: var(--serif); font-size: 21px; line-height: 1.3; }
+  a:hover .t { color: var(--accent); }
+  .d { grid-column: 1; font-size: 15px; color: var(--ink-2); }
+  time {
+    grid-column: 2; grid-row: 1;
+    font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+    white-space: nowrap; align-self: baseline;
+  }
+  .draft { color: var(--accent); font-size: 0.7em; }
+  .empty { color: var(--ink-2); }
+</style>
