@@ -1,0 +1,46 @@
+---
+// The frame every page sits in: <head>, masthead, footer.
+// A page passes a title (and optionally a description) as props,
+// and its own content goes where <slot /> is.
+import Masthead from '../components/Masthead.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Adam Jumari Burgess — engineering, teaching, and writing it down.',
+} = Astro.props;
+
+const fullTitle = title ? `${title} · jumari.com.au` : 'jumari.com.au';
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    />
+  </head>
+  <body>
+    <Masthead />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

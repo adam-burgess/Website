@@ -1,0 +1,28 @@
+---
+// Homepage. Every file in src/pages/ becomes a URL:
+//   src/pages/index.astro  ->  /
+// This is a placeholder to prove the pipeline; the approved homepage replaces it later.
+import Base from '../layouts/Base.astro';
+---
+<Base>
+  <section class="wrap hero">
+    <p class="eyebrow">Under construction</p>
+    <h1>I'm Adam Jumari Burgess.<br />I build things, teach them,<br />and <em>write it down.</em></h1>
+    <p class="intro">Writing starts here soon.</p>
+  </section>
+</Base>
+
+<style>
+  .hero { padding-block: 54px 12px; }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 5.6vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    margin: 12px 0 24px;
+    text-wrap: balance;
+  }
+  em { color: var(--accent); }
+  .intro { font-family: var(--serif); font-size: 18.5px; color: var(--ink-2); margin: 0; }
+</style>

@@ -1,0 +1,63 @@
+/* Site-wide styles. Imported once, in Base.astro, so every page gets them. */
+
+/* ---------- Design tokens (light) ---------- */
+:root {
+  --ground:   #f5f7f7;
+  --surface:  #ffffff;
+  --ink:      #11171a;
+  --ink-2:    #4d585e;
+  --ink-3:    #79868c;
+  --hairline: #d7dedf;
+  --accent:   #0f6e76;
+
+  --serif: Spectral, Georgia, "Times New Roman", serif;
+  --sans:  "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:  "IBM Plex Mono", ui-monospace, monospace;
+
+  --wrap: 1040px;
+  color-scheme: light;
+}
+
+/* ---------- Design tokens (dark, follows the OS setting) ---------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground:   #0d1113;
+    --surface:  #141a1c;
+    --ink:      #eaeff0;
+    --ink-2:    #a3b0b4;
+    --ink-3:    #77858a;
+    --hairline: #242f33;
+    --accent:   #5fd3db;
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; }
+
+a { color: var(--accent); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ---------- Shared helpers ---------- */
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: 24px; }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}

@@ -1,0 +1,29 @@
+---
+// Site footer. Links are placeholders until the accounts/addresses are confirmed.
+const year = new Date().getFullYear();
+---
+<footer>
+  <div class="wrap">
+    <div>© {year} Adam Jumari Burgess · Perth, Western Australia</div>
+    <div class="links">
+      <a href="mailto:adam@jumari.com.au">Email</a>
+      <a href="#">GitHub</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">RSS</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer { border-top: 1px solid var(--hairline); margin-top: 64px; }
+  .wrap {
+    display: flex; flex-wrap: wrap; gap: 10px 26px;
+    justify-content: space-between;
+    padding-block: 26px 40px;
+    font-family: var(--mono);
+    font-size: 11.5px; color: var(--ink-3); letter-spacing: 0.02em;
+  }
+  a { color: var(--ink-2); text-decoration: none; }
+  a:hover { color: var(--accent); }
+  .links { display: flex; gap: 20px; flex-wrap: wrap; }
+</style>
