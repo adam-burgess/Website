@@ -60,6 +60,7 @@ src/content.config.ts     collections + frontmatter schema
 - Demo of every feature: `src/content/notes/how-to-write-a-post/` (draft). Placeholder: `src/content/bench/first-draft.md` (draft).
 - Home-page Recent writing = newest 6 posts across both collections.
 - Restart `npm run dev` after changing astro.config.mjs or content.config.ts.
+- **Browser editor (added 2026-09-24):** Sveltia CMS at https://jumari.com.au/admin/ (`public/admin/index.html` + `config.yml`). Commits straight to `adam-burgess/Website` main, which triggers the deploy. Sign in with "Sign In Using Access Token" (fine-grained GitHub token, this repo only, Contents: read and write); "Sign In with GitHub" would need an OAuth server, not set up. Each post is a folder (`{{slug}}/index.md`) with its images beside it. Fields in config.yml must match src/content.config.ts. A "Maths block" editor component writes `$$…$$`; inline maths is safest in the editor's Markdown mode. Validate config changes against Sveltia's JSON schema (package `@sveltia/cms`, `schema/sveltia-cms.json`). Because the editor commits on GitHub, pull before editing locally.
 
 ## Planned layout
 - `src/content/bench/`, `src/content/notes/` (+ content config with schemas)

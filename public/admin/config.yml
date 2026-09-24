@@ -1,0 +1,100 @@
+# Settings for the writing editor at /admin/ (Sveltia CMS).
+# Docs: https://sveltiacms.app/en/docs
+# The fields below must match the schema in src/content.config.ts.
+
+backend:
+  name: github
+  repo: adam-burgess/Website
+  branch: main
+  # Commit messages the editor writes when you save or delete a post.
+  commit_messages:
+    create: 'Add {{collection}} “{{slug}}”'
+    update: 'Update {{collection}} “{{slug}}”'
+    delete: 'Delete {{collection}} “{{slug}}”'
+    uploadMedia: 'Upload “{{path}}”'
+    deleteMedia: 'Delete “{{path}}”'
+
+site_url: https://jumari.com.au
+app_title: Write · jumari.com.au
+
+# Global fallback; each collection below stores photos next to the post instead.
+media_folder: public/media
+public_folder: /media
+
+output:
+  # Leave empty optional fields (e.g. "Updated") out of the file entirely,
+  # so the site's schema doesn't reject an empty value.
+  omit_empty_optional_fields: true
+
+collections:
+  - name: notes
+    label: Field Notes
+    label_singular: Field note
+    folder: src/content/notes
+    # One folder per post (notes/<name>/index.md) so its photos live beside it.
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{title}}'
+    summary: '{{title}} — {{date}}{{draft | ternary(" (draft)", "")}}'
+    sortable_fields: [date, title]
+    preview_path: /notes/{{slug}}/
+    # Field list, defined once here (&fields) and reused by Off the Bench (*fields).
+    fields: &fields
+      - { name: title, label: Title, widget: string }
+      - name: description
+        label: Description
+        widget: text
+        hint: One or two sentences. Shown under the title and on the home-page card.
+      - name: date
+        label: Date
+        widget: datetime
+        format: YYYY-MM-DD
+        time_format: false
+      - name: updated
+        label: Updated
+        widget: datetime
+        format: YYYY-MM-DD
+        time_format: false
+        required: false
+        hint: Only if you've changed the post after publishing.
+      - name: tags
+        label: Tags
+        widget: list
+        required: false
+        hint: Short topic labels, e.g. RF, Books. Press Enter or comma between them.
+      - name: cover
+        label: Card picture
+        widget: image
+        required: false
+        hint: Optional. Shown at the top of this post's card on the home page.
+      - { name: coverAlt, label: Card picture description, widget: string, required: false }
+      - name: draft
+        label: Draft
+        widget: boolean
+        default: true
+        hint: Drafts are saved to GitHub but hidden on the live site. Turn off to publish.
+      - name: body
+        label: Body
+        widget: richtext
+        modes: [rich_text, raw]
+        hint: For maths, use Insert → Maths block, or switch to Markdown mode and type $…$ directly.
+
+  - name: bench
+    label: Off the Bench
+    label_singular: Off the Bench piece
+    folder: src/content/bench
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{title}}'
+    summary: '{{title}} — {{date}}{{draft | ternary(" (draft)", "")}}'
+    sortable_fields: [date, title]
+    preview_path: /off-the-bench/{{slug}}/
+    fields: *fields

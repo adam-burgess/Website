@@ -1,0 +1,30 @@
+<!doctype html>
+<!--
+  Writing editor for jumari.com.au, at /admin/.
+  This is Sveltia CMS (https://sveltiacms.app), a ready-made editor that reads and
+  commits posts straight to the GitHub repo. Its settings are in config.yml, next to this file.
+-->
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Write · jumari.com.au</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+    <script>
+      // "Maths block" in the editor's Insert menu: type LaTeX, get a $$ … $$ block
+      // in the saved Markdown, so the rich text editor never touches the backslashes.
+      CMS.registerEditorComponent({
+        id: 'math',
+        label: 'Maths block',
+        icon: 'function',
+        fields: [{ name: 'latex', label: 'LaTeX', widget: 'text' }],
+        pattern: /^\$\$\n([\s\S]*?)\n\$\$$/m,
+        fromBlock: (match) => ({ latex: match[1] }),
+        toBlock: ({ latex = '' }) => `$$\n${latex.trim()}\n$$`,
+        toPreview: ({ latex = '' }) => `<pre>$$ ${latex} $$</pre>`,
+      });
+    </script>
+  </body>
+</html>
