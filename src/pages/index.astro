@@ -9,9 +9,9 @@ import { getAllPosts, postUrl, SECTIONS } from '../lib/posts';
 
 // "Currently" rows. Edit these as things change.
 const currently = [
-  { label: 'Research', text: 'Honours project at the Curtin Institute of Radio Astronomy (CIRA) a tuneable load for characterising 2.45 GHz antenna arrays.' },
+  { label: 'Research', text: 'Honours project at the Curtin Institute of Radio Astronomy (CIRA)' },
   { label: 'Next',     text: 'Exchange semester at Università di Bologna, early 2027.' },
-  { label: 'Reading',  text: 'The way of Kings — Brandon Sanderson' },
+  { label: 'Reading',  text: 'The Way of Kings — Brandon Sanderson' },
 ];
 
 // Recent writing: the newest posts from both sections, as a sideways-scrolling row
@@ -28,21 +28,21 @@ const recent = (await getAllPosts()).slice(0, 6).map((post) => ({
 // The doors at the bottom of the page.
 const doors = [
   { eyebrow: 'Engineering', title: 'Field Notes', href: '/notes/',  text: 'Write ups, thoughts, guides. Find here whatever I feel to write on a technical topic or project I’m working on' },
-  { eyebrow: 'Everything else', title: 'Off the Bench', href: '/off-the-bench/', text: 'Find here my thoughts on topics that aren’t enigneering related, books, productivity, life in general... ' },
+  { eyebrow: 'Everything else', title: 'Off the Bench', href: '/off-the-bench/', text: 'Find here my thoughts on topics that aren’t enigneering related, books, productivity or life in general. ' },
 ];
 ---
 <Base>
   <section class="hero">
     <div class="wrap">
       <div>
-        <h1>Hi! I'm Adam <em>Jumari</em> Burgess.</h1>
+        <h1>Hi!<br /><span class="name">I'm Adam <em>Jumari</em> Burgess.</span></h1>
         <p class="intro">
           I'm a Electrical & Electronic Engineering Student in Perth. While I have always found that while I've always had 
           a compelling interest for electronics and lab work, university has never really been able to completely satisfy that 
           craving for me. So here you can find write ups on my attempts to solve that.
         </p>
         <p class="intro">
-          I hope you can find some value in the writing I put out. 
+          I hope you can find some value for yourself in the writing I share here. 
         </p>
       </div>
       <!-- Photo lives in src/assets/ so Astro resizes and compresses it at build time. -->
@@ -164,13 +164,21 @@ const doors = [
   h1 {
     font-family: var(--serif);
     font-weight: 400;
-    font-size: clamp(36px, 5.6vw, 58px);
+    font-size: clamp(36px, 5.6vw, 52px);
     line-height: 1.08;
     letter-spacing: -0.015em;
     margin: 0 0 24px;
     text-wrap: balance;
   }
   h1 em { color: var(--accent); }
+  /* Beside the photo, keep the name on one line. The text column is roughly
+     100vw − 404px wide (page padding + 56px gap + 300px photo), and the name is
+     about 12.5× the font size long, so size the font to fit, up to 52px.
+     Phones stack the photo underneath and are allowed to wrap. */
+  @media (min-width: 881px) {
+    h1 { font-size: min(52px, calc((100vw - 404px) / 12.5)); }
+    .name { white-space: nowrap; }
+  }
   .intro {
     margin: 0 0 16px;
     /* No line-length cap: the text runs the full width of its column, up to the photo. */

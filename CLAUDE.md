@@ -72,7 +72,7 @@ src/content.config.ts     collections + frontmatter schema
 ## Homepage (prototype v3, approved)
 Prototype: https://claude.ai/artifact/MXZv6D1XsuEQKD7gMgdHHZ
 1. Masthead: wordmark `jumari.com.au` (".com.au" in ink-3) + nav
-2. Hero: tagline (Spectral, clamp(36px, 5.6vw, 58px), last phrase italic in accent) + two first-person paragraphs + 4:5 portrait slot on the right (grid: 1fr / 300px)
+2. Hero: headline "Hi! / I'm Adam *Jumari* Burgess." (Spectral; name kept on one line beside the photo, font scales to fit, max 52px; Jumari italic in accent) + two first-person paragraphs + 4:5 portrait slot on the right (grid: 1fr / 300px)
 3. "Currently": 3-row definition list — Research / Next / Reading (Teaching removed 2026-09-24) (mono uppercase dt, hairline rules)
 4. "Recent writing" (modelled on hkk.fyi's Lab): bold Plex Sans heading + rule to the right edge; intro line with ←/→ arrow buttons; sideways-scrolling, snap-aligned track showing 2 cards at a time (85% width, one at a time, on phones). Card = 2:1 preview (image or placeholder), bold title, accent mono tags, blurb, solid accent "Read →" button; tinted background, 1.5px border. Ends with a dashed "Next up" slot. Data in the `recent` array in index.astro; small inline script drives the arrows.
 5. Doors: Field Notes / Off the Bench, two equal full-width columns, open layout (no boxes: cards were tried and rejected 2026-09-24). 30x2px accent rule, accent mono label (same as Recent writing tags), bold Plex Sans title with arrow, short description.
