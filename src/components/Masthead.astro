@@ -12,7 +12,11 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
 ---
 <header class="masthead">
   <div class="wrap">
-    <a class="wordmark" href="/">jumari<span>.com.au</span></a>
+    <a class="wordmark" href="/">
+      <!-- The Beam logo; same file as the browser-tab icon. -->
+      <img src="/favicon.svg" width="22" height="22" alt="" />
+      <span class="name">jumari<span>.com.au</span></span>
+    </a>
     <nav aria-label="Main">
       {links.map(({ href, label }) => (
         <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>
@@ -24,16 +28,18 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
 <style>
   /* Styles in an .astro file are scoped: they only affect this component. */
   .wrap {
-    display: flex; flex-wrap: wrap; align-items: baseline;
+    display: flex; flex-wrap: wrap; align-items: center;
     justify-content: space-between; gap: 12px 28px;
     padding-block: 26px 0;
   }
   .wordmark {
+    display: inline-flex; align-items: center; gap: 10px;
     font-family: var(--mono);
     font-size: 13px; letter-spacing: 0.02em;
     color: var(--ink); text-decoration: none;
   }
-  .wordmark span { color: var(--ink-3); }
+  .wordmark img { display: block; }
+  .name span { color: var(--ink-3); }
   nav { display: flex; gap: 22px; flex-wrap: wrap; }
   nav a {
     font-size: 14px; color: var(--ink-2); text-decoration: none;

@@ -36,11 +36,11 @@ Influences: hkk.fyi (subject site: one thesis, a Lab of interactive browser inst
 ```
 astro.config.mjs          site: 'https://jumari.com.au' (no base needed with custom domain)
 .github/workflows/deploy.yml   build (withastro/action@v6) + deploy (actions/deploy-pages@v5) on push to main
-public/favicon.svg        teal square with "j"
+public/favicon.svg        logo: "Beam", light tile (teal radiation pattern — main lobe + two side lobes — on a white tile with a thin edge), chosen 2026-09-25; also shown in the masthead
 src/styles/global.css     design tokens (light + dark via prefers-color-scheme), font vars, .wrap, .eyebrow
 src/layouts/Base.astro    <head> (title, description, canonical, favicon, Google Fonts) + Masthead + <slot/> + Footer
-src/components/Masthead.astro   wordmark + nav (Home, Field Notes, Off the Bench), aria-current on active section
-src/components/Footer.astro     © line + LinkedIn (placeholder) + AI disclaimer line
+src/components/Masthead.astro   logo (favicon.svg, 22px) + wordmark + nav (Home, Field Notes, Off the Bench), aria-current on active section
+src/components/Footer.astro     © line + LinkedIn (linkedin.com/in/adam-j-burgess) + AI disclaimer line
 src/pages/index.astro     homepage: hero, Currently, Recent writing (carousel), doors (data arrays in frontmatter)
 src/pages/notes/, off-the-bench/   index.astro (dated list via PostList) + [...slug].astro (one page per post, Piece layout)
 src/layouts/Piece.astro   post page: eyebrow, title, subtitle, byline (date, reading time); Off the Bench 680px column, Field Notes figures/code up to 880px
@@ -115,7 +115,7 @@ Not at launch: array factor explorer (interactive; maths exists in the prototype
 - Portrait: in place (src/assets/portrait.jpg, head-and-shoulders photo, replaced NTU photo 2026-09-25)
 - Verify the four "Currently" lines
 - GitHub username; public vs private repo
-- Real footer link (LinkedIn)
+- Footer LinkedIn link: done 2026-09-25
 
 ## Next steps
 1. Finish first commit + Publish Branch; set repo Settings → Pages → Source = GitHub Actions; confirm the workflow deploys.
