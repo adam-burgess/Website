@@ -1,6 +1,6 @@
 # jumari.com.au
 
-Personal writing website for Adam Jumari Burgess. Electrical & electronic engineering + computer science student at Curtin University, Perth. Honours research at the Curtin Institute of Radio Astronomy (a wirelessly tuneable load for characterising 2.45 GHz antenna arrays); also demonstrates undergraduate labs.
+Personal writing website for Adam Jumari Burgess. Electrical & electronic engineering + computer science student at Curtin University, Perth. Honours research at the Curtin Institute of Radio Astronomy (a wirelessly tuneable load for characterising 2.45 GHz antenna arrays).
 
 ## How to work with Adam
 - Build step by step and explain each change as you make it. He wants to understand the project well enough to extend it himself.
@@ -112,7 +112,7 @@ Not at launch: array factor explorer (interactive; maths exists in the prototype
 
 ## Open items
 - Confirm or rewrite tagline
-- Portrait: in place (src/assets/portrait.jpg, NTU sign photo, 2026-09-25); alt text may need editing
+- Portrait: in place (src/assets/portrait.jpg, head-and-shoulders photo, replaced NTU photo 2026-09-25)
 - Verify the four "Currently" lines
 - GitHub username; public vs private repo
 - Real footer link (LinkedIn)

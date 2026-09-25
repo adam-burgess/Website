@@ -9,14 +9,12 @@ import { getAllPosts, postUrl, SECTIONS } from '../lib/posts';
 
 // "Currently" rows. Edit these as things change.
 const currently = [
-  { label: 'Research', text: 'Honours project at the Curtin Institute of Radio Astronomy — a wirelessly tuneable load for characterising 2.45 GHz antenna arrays.' },
+  { label: 'Research', text: 'Honours project at the Curtin Institute of Radio Astronomy (CIRA) a tuneable load for characterising 2.45 GHz antenna arrays.' },
   { label: 'Next',     text: 'Exchange semester at Università di Bologna, early 2027.' },
-  { label: 'Reading',  text: 'Ippolito, <em>Satellite Communications Systems Engineering</em> — slowly.' },
+  { label: 'Reading',  text: 'The way of Kings — Brandon Sanderson' },
 ];
 
 // Recent writing: the newest posts from both sections, as a sideways-scrolling row
-// of cards (modelled on hkk.fyi's Lab). Filled automatically from src/content/.
-// A post's `cover` picture shows at the top of its card.
 const recent = (await getAllPosts()).slice(0, 6).map((post) => ({
   title: post.data.title,
   tags: [SECTIONS[post.collection].single, ...post.data.tags].join(' · '),
@@ -29,8 +27,8 @@ const recent = (await getAllPosts()).slice(0, 6).map((post) => ({
 
 // The doors at the bottom of the page.
 const doors = [
-  { eyebrow: 'Engineering', title: 'Field Notes', href: '/notes/',  text: 'Write-ups, guides and browser instruments from the bench — measurement, RF hardware, and the parts that went wrong first.' },
-  { eyebrow: 'Everything else', title: 'Off the Bench', href: '/off-the-bench/', text: 'Books I’m reading, opinion pieces, and the systems I use to get things done.' },
+  { eyebrow: 'Engineering', title: 'Field Notes', href: '/notes/',  text: 'Write ups, thoughts, guides. Find here whatever I feel to write on a technical topic or project I’m working on' },
+  { eyebrow: 'Everything else', title: 'Off the Bench', href: '/off-the-bench/', text: 'Find here my thoughts on topics that aren’t enigneering related, books, productivity, life in general... ' },
 ];
 ---
 <Base>
@@ -41,17 +39,17 @@ const doors = [
         <p class="intro">
           I'm a Electrical & Electronic Engineering Student in Perth. While I have always found that while I've always had 
           a compelling interest for electronics and lab work, university has never really been able to completely satisfy that 
-          craving for me. So heres my attempt at resolving that.
+          craving for me. So here you can find write ups on my attempts to solve that.
         </p>
         <p class="intro">
-          I do hope that my attempt at getting my rapidly shifting thoughts and interests in engineering out into the world finds some sort of value to you. 
+          I hope you can find some value in the writing I put out. 
         </p>
       </div>
       <!-- Photo lives in src/assets/ so Astro resizes and compresses it at build time. -->
       <figure class="portrait">
         <Image
           src={portrait}
-          alt="Two students on the Nanyang Technological University sign in Singapore"
+          alt="Portrait of Adam Jumari Burgess"
           widths={[300, 600, 900]}
           sizes="(max-width: 880px) 260px, 300px"
           loading="eager"
@@ -81,7 +79,7 @@ const doors = [
         <span class="secrule" aria-hidden="true"></span>
       </h2>
       <div class="bar">
-        <p class="section-intro">The latest from Field Notes and Off the Bench. Scroll sideways for more.</p>
+        <p class="section-intro">The latest pieces from me.</p>
         <div class="arrows">
           <button type="button" class="arrow" data-dir="-1" aria-label="Previous">←</button>
           <button type="button" class="arrow" data-dir="1" aria-label="Next">→</button>
@@ -109,7 +107,7 @@ const doors = [
         ))}
         <article class="card slot">
           <p class="tags">Next up</p>
-          <p class="text">On the bench. The next piece goes here.</p>
+          <p class="text">The next piece will go here when I feel compelled to write it. 😸</p>
         </article>
       </div>
     </div>
@@ -175,7 +173,7 @@ const doors = [
   h1 em { color: var(--accent); }
   .intro {
     margin: 0 0 16px;
-    max-width: 54ch;
+    /* No line-length cap: the text runs the full width of its column, up to the photo. */
     font-family: var(--serif);
     font-size: 18.5px;
     line-height: 1.6;
