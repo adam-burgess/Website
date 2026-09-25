@@ -16,8 +16,8 @@ const {
   description = 'Adam Jumari Burgess — articles on engineering and more general topics.',
 } = Astro.props;
 
-// Browser tab title: "Adam Jumari Burgess" on the home page, "Page · Adam Jumari Burgess" elsewhere.
-const fullTitle = title ? `${title} · Adam Jumari Burgess` : 'Adam Jumari Burgess';
+// Browser tab title: "Jumari | Portfolio & Writing" on the home page, "Page | Jumari" elsewhere.
+const fullTitle = title ? `${title} | Jumari` : 'Jumari | Portfolio & Writing';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>
