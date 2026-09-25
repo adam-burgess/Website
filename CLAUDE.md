@@ -67,7 +67,7 @@ src/content.config.ts     collections + frontmatter schema
 - `src/components/`: Masthead, Footer, Currently, RecentList, PieceMeta
 - `src/layouts/`: Base.astro, Piece.astro (Off the Bench + field note templates)
 - `src/pages/`: index, off-the-bench/, notes/, rss.xml.js
-- `public/`: portrait, favicon
+- `public/`: favicon, admin/ (editor); portrait lives in `src/assets/` so Astro optimises it
 
 ## Homepage (prototype v3, approved)
 Prototype: https://claude.ai/artifact/MXZv6D1XsuEQKD7gMgdHHZ
@@ -112,7 +112,7 @@ Not at launch: array factor explorer (interactive; maths exists in the prototype
 
 ## Open items
 - Confirm or rewrite tagline
-- Portrait photo for hero
+- Portrait: in place (src/assets/portrait.jpg, NTU sign photo, 2026-09-25); alt text may need editing
 - Verify the four "Currently" lines
 - GitHub username; public vs private repo
 - Real footer link (LinkedIn)

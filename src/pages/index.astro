@@ -4,6 +4,7 @@
 // Ported from the approved prototype (v3).
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import portrait from '../assets/portrait.jpg';
 import { getAllPosts, postUrl, SECTIONS } from '../lib/posts';
 
 // "Currently" rows. Edit these as things change.
@@ -38,19 +39,23 @@ const doors = [
       <div>
         <h1>Hi! I'm Adam <em>Jumari</em> Burgess.</h1>
         <p class="intro">
-          Engineering student in Perth, currently building radio hardware for a research
-          group that points antennas at the sky. Before that I spent a year in oil and gas
-          safety engineering, which taught me more about writing clearly than any unit did.
+          I'm a Electrical & Electronic Engineering Student in Perth. While I have always found that while I've always had 
+          a compelling interest for electronics and lab work, university has never really been able to completely satisfy that 
+          craving for me. So heres my attempt at resolving that.
         </p>
         <p class="intro">
-          I demonstrate first-year laboratories, run rural volunteer trips, and keep an
-          unreasonable number of notes. This is where the better ones end up.
+          I do hope that my attempt at getting my rapidly shifting thoughts and interests in engineering out into the world finds some sort of value to you. 
         </p>
       </div>
-      <!-- Swap for <img src="/portrait.jpg" alt="…" /> once the photo is in public/ -->
+      <!-- Photo lives in src/assets/ so Astro resizes and compresses it at build time. -->
       <figure class="portrait">
-        <span>PORTRAIT</span>
-        <span>4:5</span>
+        <Image
+          src={portrait}
+          alt="Two students on the Nanyang Technological University sign in Singapore"
+          widths={[300, 600, 900]}
+          sizes="(max-width: 880px) 260px, 300px"
+          loading="eager"
+        />
       </figure>
     </div>
   </section>
@@ -180,17 +185,12 @@ const doors = [
   .portrait {
     margin: 0;
     aspect-ratio: 4 / 5;
-    border: 1px dashed var(--hairline);
+    overflow: hidden;
+    border-radius: 4px;
     background: var(--surface);
-    display: grid;
-    place-content: center;
-    gap: 4px;
-    text-align: center;
-    color: var(--ink-3);
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
   }
+  /* Fill the 4:5 frame, trimming the edges rather than squashing the photo. */
+  .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
 
   /* Section labels are h2s for document structure but look like eyebrows. */
   h2.eyebrow { margin: 0; font-weight: 400; }

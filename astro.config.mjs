@@ -6,12 +6,31 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeFigure from './src/lib/rehype-figure.mjs';
 
+// The writing editor lives at public/admin/index.html. GitHub Pages serves it at /admin/,
+// but `npm run dev` doesn't serve a folder's index.html, so point /admin there in dev only.
+function adminInDev() {
+  return {
+    name: 'admin-in-dev',
+    hooks: {
+      'astro:server:setup': ({ server }) => {
+        server.middlewares.use((req, res, next) => {
+          if (req.url === '/admin' || req.url === '/admin/') {
+            res.writeHead(302, { Location: '/admin/index.html' });
+            return res.end();
+          }
+          next();
+        });
+      },
+    },
+  };
+}
+
 export default defineConfig({
   // The live URL. Used to build absolute links (RSS, canonical tags, sitemap).
   site: 'https://jumari.com.au',
 
   // MDX = Markdown that can also use components. Plain .md files still work.
-  integrations: [mdx()],
+  integrations: [mdx(), adminInDev()],
 
   // These settings apply to both .md and .mdx posts.
   markdown: {
