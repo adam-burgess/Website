@@ -39,7 +39,7 @@ astro.config.mjs          site: 'https://jumari.com.au' (no base needed with cus
 public/favicon.svg        teal square with "j"
 src/styles/global.css     design tokens (light + dark via prefers-color-scheme), font vars, .wrap, .eyebrow
 src/layouts/Base.astro    <head> (title, description, canonical, favicon, Google Fonts) + Masthead + <slot/> + Footer
-src/components/Masthead.astro   wordmark + nav (Home, Off the Bench, Field Notes), aria-current on active section
+src/components/Masthead.astro   wordmark + nav (Home, Field Notes, Off the Bench), aria-current on active section
 src/components/Footer.astro     © line + LinkedIn (placeholder) + AI disclaimer line
 src/pages/index.astro     homepage: hero, Currently, Recent writing (carousel), doors (data arrays in frontmatter)
 src/pages/notes/, off-the-bench/   index.astro (dated list via PostList) + [...slug].astro (one page per post, Piece layout)
