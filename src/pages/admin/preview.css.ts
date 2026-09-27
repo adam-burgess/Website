@@ -1,9 +1,7 @@
 // Stylesheet for the writing editor's preview pane, served at /admin/preview.css.
-// It's stitched together from the site's own style files at build time, so the
+// It's the site's own site.css plus a few extra lines, so the
 // preview always matches the real post page with nothing to keep in sync by hand.
-import globalCss from '../../styles/global.css?raw';
-import pieceCss from '../../styles/piece.css?raw';
-import proseCss from '../../styles/prose.css?raw';
+import siteCss from '../../site.css?raw';
 
 // A copy of the site header (wordmark only; the nav isn't clickable in the preview).
 const mastheadCss = `
@@ -19,7 +17,7 @@ const mastheadCss = `
 `;
 
 export function GET() {
-  return new Response([globalCss, pieceCss, proseCss, mastheadCss].join('\n'), {
+  return new Response([siteCss, mastheadCss].join('\n'), {
     headers: { 'Content-Type': 'text/css; charset=utf-8' },
   });
 }

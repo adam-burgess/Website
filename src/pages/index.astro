@@ -3,9 +3,9 @@
 //   src/pages/index.astro  ->  /
 // Ported from the approved prototype (v3).
 import { Image } from 'astro:assets';
-import Base from '../layouts/Base.astro';
-import portrait from '../assets/portrait.jpg';
-import { getAllPosts, postUrl, SECTIONS } from '../lib/posts';
+import Base from '../components/Base.astro';
+import portrait from '../images/portrait.jpg';
+import { getAllPosts, postUrl, SECTIONS, SECTION_LIST } from '../posts';
 
 // "Currently" rows. Edit these as things change.
 const currently = [
@@ -25,11 +25,8 @@ const recent = (await getAllPosts()).slice(0, 6).map((post) => ({
   label: SECTIONS[post.collection].single,
 }));
 
-// The doors at the bottom of the page.
-const doors = [
-  { eyebrow: 'Engineering', title: 'Field Notes', href: '/notes/',  text: 'Write ups, thoughts, guides. Find here whatever I feel to write on a technical topic or project I’m working on.' },
-  { eyebrow: 'Everything else', title: 'Off the Bench', href: '/off-the-bench/', text: 'Find here my thoughts on topics that aren’t enigneering related, books, productivity or life in general.' },
-];
+// The two links at the bottom of the page. Their text comes from SECTIONS in src/posts.ts.
+const doors = SECTION_LIST.map((s) => ({ eyebrow: s.eyebrow, title: s.name, href: s.path, text: s.blurb }));
 ---
 <Base>
   <section class="hero">
@@ -45,7 +42,7 @@ const doors = [
           I hope you can find some value for yourself in the writing I share here. 
         </p>
       </div>
-      <!-- Photo lives in src/assets/ so Astro resizes and compresses it at build time. -->
+      <!-- Photo lives in src/images/ so Astro resizes and compresses it at build time. -->
       <figure class="portrait">
         <Image
           src={portrait}

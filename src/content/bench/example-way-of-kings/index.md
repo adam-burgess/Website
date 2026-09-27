@@ -5,7 +5,7 @@ date: 2026-09-12
 tags: [Books]
 cover: ./cover.svg
 coverAlt: Stylised storm lines over a horizon
-draft: true
+draft: false
 ---
 
 > **Example post.** Placeholder text so you can see how a post looks. Delete the `example-…` folders when you're done.

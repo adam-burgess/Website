@@ -1,17 +1,23 @@
 ---
-// Field Notes section page. URL: /notes/
-import Base from '../../layouts/Base.astro';
+// A section's page: /notes/ and /off-the-bench/.
+// One file makes both pages. The square brackets in the folder name, [section],
+// mean "fill this in from the list below" — so Astro builds it once per section.
+import Base from '../../components/Base.astro';
 import PostList from '../../components/PostList.astro';
-import { getPosts, SECTIONS } from '../../lib/posts';
+import { getPosts, SECTION_LIST } from '../../posts';
 
-const section = SECTIONS.notes;
-const posts = await getPosts('notes');
+export function getStaticPaths() {
+  return SECTION_LIST.map((section) => ({ params: { section: section.slug }, props: { section } }));
+}
+
+const { section } = Astro.props;
+const posts = await getPosts(section.key);
 ---
-<Base title={section.name} description="Write-ups, guides and browser instruments from the bench — measurement, RF hardware, and the parts that went wrong first.">
+<Base title={section.name} description={section.blurb}>
   <section class="wrap">
-    <p class="eyebrow">Engineering</p>
+    <p class="eyebrow">{section.eyebrow}</p>
     <h1>{section.name}</h1>
-    <p class="intro">Write-ups, guides and browser instruments from the bench — measurement, RF hardware, and the parts that went wrong first.</p>
+    <p class="intro">{section.blurb}</p>
     <PostList posts={posts} />
   </section>
 </Base>

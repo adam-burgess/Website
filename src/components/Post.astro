@@ -2,11 +2,9 @@
 // The page every post sits in. Off the Bench pieces get a Substack-style reading
 // column; Field Notes share it but let figures and code run a little wider.
 import Base from './Base.astro';
-import SeriesBox from '../components/SeriesBox.astro';
-import { SECTIONS, getSeries, longDate, postUrl, readingTime, type Post } from '../lib/posts';
+import SeriesBox from './SeriesBox.astro';
+import { SECTIONS, getSeries, longDate, postUrl, readingTime, type Post } from '../posts';
 import 'katex/dist/katex.min.css';
-import '../styles/piece.css';
-import '../styles/prose.css';
 
 interface Props {
   post: Post;

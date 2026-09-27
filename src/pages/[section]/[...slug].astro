@@ -1,18 +1,24 @@
 ---
-// One Field note page. URL: /notes/<post name>/
-// getStaticPaths runs at build time and makes one page per post.
+// One post's page, e.g. /notes/how-to-write-a-post/.
+// One file makes every post page, in both sections: [section] is the section's
+// web address and [...slug] is the post's folder name.
 import { render } from 'astro:content';
-import Piece from '../../layouts/Piece.astro';
-import { getPosts } from '../../lib/posts';
+import Post from '../../components/Post.astro';
+import { getPosts, SECTION_LIST } from '../../posts';
 
 export async function getStaticPaths() {
-  const posts = await getPosts('notes');
-  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+  const pages = [];
+  for (const section of SECTION_LIST) {
+    for (const post of await getPosts(section.key)) {
+      pages.push({ params: { section: section.slug, slug: post.id }, props: { post } });
+    }
+  }
+  return pages;
 }
 
 const { post } = Astro.props;
 const { Content } = await render(post);
 ---
-<Piece post={post}>
+<Post post={post}>
   <Content />
-</Piece>
+</Post>

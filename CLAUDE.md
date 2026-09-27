@@ -33,22 +33,26 @@ Influences: hkk.fyi (subject site: one thesis, a Lab of interactive browser inst
 - Content collections added 2026-09-24 (see Writing posts). Homepage ported from prototype v3; Recent writing is filled from the collections.
 
 ## File map
+Simplified 2026-09-27; README.md explains the layout in plain English for anyone.
 ```
-astro.config.mjs          site: 'https://jumari.com.au' (no base needed with custom domain)
+astro.config.mjs          site URL, MDX, maths (remark-math + KaTeX), Shiki themes, figureCaptions plugin (inline), /admin dev redirect
 .github/workflows/deploy.yml   build (withastro/action@v6) + deploy (actions/deploy-pages@v5) on push to main
-public/favicon.svg        logo: "Beam", light tile (teal radiation pattern — main lobe + two side lobes — on a white tile with a thin edge), chosen 2026-09-25; browser-tab icon only
-src/styles/global.css     design tokens (light + dark via prefers-color-scheme), font vars, .wrap, .eyebrow
-src/layouts/Base.astro    <head> (title, description, canonical, favicon, Google Fonts) + Masthead + <slot/> + Footer
-src/components/Masthead.astro   wordmark jumari.com.au + nav (logo removed from header 2026-09-27; tab icon only) (Home, Field Notes, Off the Bench), aria-current on active section
-src/components/Footer.astro     © line + LinkedIn (linkedin.com/in/adam-j-burgess) + AI disclaimer line
-src/pages/index.astro     homepage: hero, Currently, Recent writing (carousel), doors (data arrays in frontmatter)
-src/pages/notes/, off-the-bench/   index.astro (dated list via PostList) + [...slug].astro (one page per post, Piece layout)
-src/styles/piece.css      post page frame styles (shared with the editor preview)
-src/layouts/Piece.astro   post page: eyebrow, title, subtitle, byline (date, reading time); Off the Bench 680px column, Field Notes figures/code up to 880px
-src/styles/prose.css      post body styles
-src/lib/posts.ts          getPosts / getAllPosts / postUrl / readingTime / SECTIONS
-src/lib/rehype-figure.mjs image with a title -> <figure> + <figcaption>
+README.md                 plain-English guide to the project
+public/favicon.svg        logo: "Beam", light tile; browser-tab icon only
+public/admin/             Sveltia CMS (index.html: editor + preview template; config.yml: fields)
+src/site.css              ALL shared CSS: 1 tokens/fonts/basics, 2 post frame (+ series nav), 3 post text (.prose)
+src/posts.ts              SECTIONS (name, single, slug, path, eyebrow, blurb) + SECTION_LIST; getPosts/getAllPosts/getSeries/postUrl/readingTime/dates
 src/content.config.ts     collections + frontmatter schema
+src/images/portrait.jpg   hero photo (Astro-optimised)
+src/components/Base.astro      <head> + Masthead + slot + Footer; imports site.css
+src/components/Masthead.astro  wordmark jumari.com.au + nav (Home, Field Notes, Off the Bench)
+src/components/Footer.astro    © line + LinkedIn + AI disclaimer
+src/components/Post.astro      post page (was layouts/Piece.astro); imports KaTeX CSS
+src/components/PostList.astro, SeriesBox.astro
+src/pages/index.astro          home page; doors built from SECTION_LIST
+src/pages/[section]/index.astro        both section list pages (/notes/, /off-the-bench/) via getStaticPaths over SECTION_LIST
+src/pages/[section]/[...slug].astro    every post page in both sections
+src/pages/admin/preview.css.ts         /admin/preview.css = site.css + editor-only rules
 ```
 
 ## Writing posts
@@ -60,17 +64,13 @@ src/content.config.ts     collections + frontmatter schema
 - Astro 7's default Markdown engine (Sätteri) doesn't run remark/rehype plugins, so astro.config.mjs sets `markdown.processor: unified({...})` from `@astrojs/markdown-remark`.
 - Demo of every feature: `src/content/notes/how-to-write-a-post/` (draft). Placeholder: `src/content/bench/first-draft.md` (draft).
 - Home-page Recent writing = newest 6 posts across both collections.
-- **Series (2026-09-27):** optional frontmatter `series` (name; exact match groups posts, across both sections) and `part` (int, order; else by date oldest first). `getSeries()` in posts.ts. Post page shows SeriesBox (src/components/SeriesBox.astro: "Part n of N · name" + numbered list) under the byline, and previous/next cards at the bottom (styles in piece.css). PostList shows a "Series · name · Part n" line. Editor has Series + Part number fields; its preview shows the series label only.
+- **Series (2026-09-27):** optional frontmatter `series` (name; exact match groups posts, across both sections) and `part` (int, order; else by date oldest first). `getSeries()` in posts.ts. Post page shows SeriesBox (src/components/SeriesBox.astro: "Part n of N · name" + numbered list) under the byline, and previous/next cards at the bottom (styles in site.css). PostList shows a "Series · name · Part n" line. Editor has Series + Part number fields; its preview shows the series label only.
 - Restart `npm run dev` after changing astro.config.mjs or content.config.ts.
 - **Browser editor (added 2026-09-24):** Sveltia CMS at https://jumari.com.au/admin/ (`public/admin/index.html` + `config.yml`). Commits straight to `adam-burgess/Website` main, which triggers the deploy. Sign in with "Sign In Using Access Token" (fine-grained GitHub token, this repo only, Contents: read and write); "Sign In with GitHub" would need an OAuth server, not set up. Each post is a folder (`{{slug}}/index.md`) with its images beside it. Fields in config.yml must match src/content.config.ts. A "Maths block" editor component writes `$$…$$`; inline maths is safest in the editor's Markdown mode. Validate config changes against Sveltia's JSON schema (package `@sveltia/cms`, `schema/sveltia-cms.json`). Because the editor commits on GitHub, pull before editing locally.
-- **Editor preview (2026-09-27):** `public/admin/index.html` registers a preview template for both collections that copies Piece.astro (masthead wordmark, eyebrow, title, subtitle, byline, body, back link) and renders the body with marked + KaTeX (CDN, KaTeX pinned to the site's version) plus the image-caption rule. Styles come from `/admin/preview.css`, an endpoint (`src/pages/admin/preview.css.ts`) that concatenates global.css + piece.css + prose.css, so the preview tracks the site automatically. Post-page frame styles live in `src/styles/piece.css` (moved out of Piece.astro so both can share them). Known gaps vs the live page: code blocks aren't syntax-coloured, footnotes show as plain text. If Piece.astro's markup changes, update the template in index.html to match.
+- **Editor preview (2026-09-27):** `public/admin/index.html` registers a preview template for both collections that copies Post.astro (masthead wordmark, eyebrow, title, subtitle, byline, body, back link) and renders the body with marked + KaTeX (CDN, KaTeX pinned to the site's version) plus the image-caption rule. Styles come from `/admin/preview.css`, an endpoint (`src/pages/admin/preview.css.ts`) that serves site.css plus a few editor-only rules, so the preview tracks the site automatically. Post-page styles live in `src/site.css` (parts 2 and 3), shared with the editor preview. Known gaps vs the live page: code blocks aren't syntax-coloured, footnotes show as plain text. If Post.astro's markup changes, update the template in index.html to match.
 
 ## Planned layout
-- `src/content/bench/`, `src/content/notes/` (+ content config with schemas)
-- `src/components/`: Masthead, Footer, Currently, RecentList, PieceMeta
-- `src/layouts/`: Base.astro, Piece.astro (Off the Bench + field note templates)
-- `src/pages/`: index, off-the-bench/, notes/, rss.xml.js
-- `public/`: favicon, admin/ (editor); portrait lives in `src/assets/` so Astro optimises it
+- Still to add: `src/pages/rss.xml.js` (RSS feed).
 
 ## Homepage (prototype v3, approved)
 Prototype: https://claude.ai/artifact/MXZv6D1XsuEQKD7gMgdHHZ
@@ -123,5 +123,5 @@ Not at launch: array factor explorer (interactive; maths exists in the prototype
 ## Next steps
 1. Finish first commit + Publish Branch; set repo Settings → Pages → Source = GitHub Actions; confirm the workflow deploys.
 2. Domain: verify, add custom domain, DNS at VentraIP, enforce HTTPS.
-3. Add content collections (bench, notes) with schemas; Piece layout.
+3. Add content collections (bench, notes) with schemas; Post layout. (done)
 4. Write the three launch pieces.

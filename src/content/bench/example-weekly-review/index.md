@@ -3,7 +3,7 @@ title: The weekly review that stuck
 description: I've tried six productivity systems. This is the one that survived a whole semester, and why.
 date: 2026-09-26
 tags: [Productivity]
-draft: true
+draft: false
 ---
 
 > **Example post.** Placeholder text so you can see how a post looks. Delete the `example-…` folders when you're done.

@@ -4,7 +4,37 @@ import mdx from '@astrojs/mdx';
 import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import rehypeFigure from './src/lib/rehype-figure.mjs';
+import { visit } from 'unist-util-visit';
+
+// Photo captions: an image on its own line with text in quotes after it,
+//   ![A VNA on the bench](./vna.jpg "Calibrating before every sweep.")
+// becomes a <figure> with that text as its <figcaption>. Images without quotes are left alone.
+function figureCaptions() {
+  return (tree) => {
+    visit(tree, 'element', (node, index, parent) => {
+      if (node.tagName !== 'p' || !parent || index === undefined) return;
+
+      // Ignore whitespace-only text around the image.
+      const kids = node.children.filter((c) => !(c.type === 'text' && !c.value.trim()));
+      if (kids.length !== 1 || kids[0].tagName !== 'img') return;
+
+      const img = kids[0];
+      const caption = img.properties?.title;
+      if (!caption) return;
+      delete img.properties.title;
+
+      parent.children[index] = {
+        type: 'element',
+        tagName: 'figure',
+        properties: {},
+        children: [
+          img,
+          { type: 'element', tagName: 'figcaption', properties: {}, children: [{ type: 'text', value: String(caption) }] },
+        ],
+      };
+    });
+  };
+}
 
 // The writing editor lives at public/admin/index.html. GitHub Pages serves it at /admin/,
 // but `npm run dev` doesn't serve a folder's index.html, so point /admin there in dev only.
@@ -39,8 +69,8 @@ export default defineConfig({
     processor: unified({
       // $inline$ and $$display$$ maths, rendered to HTML at build time by KaTeX.
       remarkPlugins: [remarkMath],
-      // rehypeFigure turns ![alt](./photo.jpg "Caption") into a captioned figure.
-      rehypePlugins: [rehypeKatex, rehypeFigure],
+      // figureCaptions (above) turns ![alt](./photo.jpg "Caption") into a captioned photo.
+      rehypePlugins: [rehypeKatex, figureCaptions],
     }),
     // Code blocks: coloured at build time, one theme for light mode and one for dark.
     shikiConfig: {

@@ -1,14 +1,34 @@
-// Shared helpers for reading posts out of the two collections.
+// Everything to do with posts: the two sections, and helpers for listing posts,
+// finding a series, building links, reading time and dates.
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type Section = 'notes' | 'bench';
 export type Post = CollectionEntry<'notes'> | CollectionEntry<'bench'>;
 
-// Names and URLs for each section, in one place.
+// The two writing sections. Everything about a section lives here: its name,
+// its web address, and the label and description shown on its page and the home page.
+// The key (notes / bench) is the folder name inside src/content/.
 export const SECTIONS = {
-  notes: { name: 'Field Notes', single: 'Field note', path: '/notes/' },
-  bench: { name: 'Off the Bench', single: 'Off the bench', path: '/off-the-bench/' },
+  notes: {
+    name: 'Field Notes',
+    single: 'Field note',
+    slug: 'notes',
+    path: '/notes/',
+    eyebrow: 'Engineering',
+    blurb: 'Write ups, thoughts, guides. Find here whatever I feel to write on a technical topic or project I’m working on.',
+  },
+  bench: {
+    name: 'Off the Bench',
+    single: 'Off the bench',
+    slug: 'off-the-bench',
+    path: '/off-the-bench/',
+    eyebrow: 'Everything else',
+    blurb: 'Find here my thoughts on topics that aren’t enigneering related, books, productivity or life in general.',
+  },
 } as const;
+
+// Both sections as a list, e.g. for making one page per section.
+export const SECTION_LIST = Object.entries(SECTIONS).map(([key, info]) => ({ key: key as Section, ...info }));
 
 // Newest first. Drafts are included in `npm run dev` and left out of the live build.
 export async function getPosts(section: Section): Promise<Post[]> {

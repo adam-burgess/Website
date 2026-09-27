@@ -2,9 +2,9 @@
 // The frame every page sits in: <head>, masthead, footer.
 // A page passes a title (and optionally a description) as props,
 // and its own content goes where <slot /> is.
-import Masthead from '../components/Masthead.astro';
-import Footer from '../components/Footer.astro';
-import '../styles/global.css';
+import Masthead from './Masthead.astro';
+import Footer from './Footer.astro';
+import '../site.css';
 
 interface Props {
   title?: string;
