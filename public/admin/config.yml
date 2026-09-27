@@ -72,6 +72,18 @@ collections:
         required: false
         hint: Optional. Shown at the top of this post's card on the home page.
       - { name: coverAlt, label: Card picture description, widget: string, required: false }
+      - name: series
+        label: Series
+        widget: string
+        required: false
+        hint: Optional. Posts with exactly the same series name are grouped, with a contents box on each.
+      - name: part
+        label: Part number
+        widget: number
+        value_type: int
+        min: 1
+        required: false
+        hint: Optional. Order within the series; leave empty to order by date.
       - name: draft
         label: Draft
         widget: boolean

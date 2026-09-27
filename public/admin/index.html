@@ -12,6 +12,9 @@
   </head>
   <body>
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+    <!-- For the preview pane: Markdown → HTML, and LaTeX → maths (same KaTeX version as the site). -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@18.0.14/lib/marked.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.18.9/dist/katex.min.js"></script>
     <script>
       // "Maths block" in the editor's Insert menu: type LaTeX, get a $$ … $$ block
       // in the saved Markdown, so the rich text editor never touches the backslashes.
@@ -25,6 +28,119 @@
         toBlock: ({ latex = '' }) => `$$\n${latex.trim()}\n$$`,
         toPreview: ({ latex = '' }) => `<pre>$$ ${latex} $$</pre>`,
       });
+
+      // ---------- Preview pane: look like the real post page ----------
+
+      // The site's fonts, KaTeX's styles, and the site's own post-page CSS
+      // (/admin/preview.css is built from src/styles/, so it always matches).
+      CMS.registerPreviewStyle('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+      CMS.registerPreviewStyle('https://cdn.jsdelivr.net/npm/katex@0.18.9/dist/katex.min.css');
+      CMS.registerPreviewStyle('/admin/preview.css');
+
+      const SECTIONS = {
+        notes: { name: 'Field Notes' },
+        bench: { name: 'Off the Bench' },
+      };
+
+      // Same wording as the site's byline: "24 Sept 2026", "3 min read".
+      const longDate = (value) => {
+        const d = new Date(value);
+        return isNaN(d) ? '' : d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+      };
+      const readingTime = (body = '') => {
+        const text = body.replace(/```[\s\S]*?```/g, '').replace(/\$\$[\s\S]*?\$\$/g, '');
+        const words = text.split(/\s+/).filter(Boolean).length;
+        return `${Math.max(1, Math.round(words / 230))} min read`;
+      };
+
+      // Markdown → HTML the way the site does it: maths via KaTeX, and an image
+      // with "a caption" in quotes becomes a captioned figure.
+      function renderBody(markdown, getAsset) {
+        const maths = [];
+        const keep = (tex, display) => {
+          maths.push({ tex, display });
+          return `\u0000M${maths.length - 1}\u0000`;
+        };
+        // Take maths out before Markdown runs (so _ and \ inside it survive),
+        // but leave code blocks and `inline code` alone.
+        const parts = markdown.split(/(```[\s\S]*?```|`[^`\n]*`)/g);
+        const guarded = parts
+          .map((part, i) => (i % 2 ? part : part
+            .replace(/\$\$([\s\S]+?)\$\$/g, (_, tex) => `\n\n${keep(tex, true)}\n\n`)
+            .replace(/\$([^\s$](?:[^$\n]*?[^\s$])?)\$/g, (_, tex) => keep(tex, false))))
+          .join('');
+
+        let html = marked.parse(guarded, { gfm: true });
+        html = html.replace(/\u0000M(\d+)\u0000/g, (_, n) => {
+          const { tex, display } = maths[n];
+          try {
+            return katex.renderToString(tex.trim(), { displayMode: display, throwOnError: false });
+          } catch {
+            return tex;
+          }
+        });
+        // A display equation on its own shouldn't sit inside a <p>.
+        html = html.replace(/<p>\s*(<span class="katex-display">[\s\S]*?<\/span>)\s*<\/p>/g, '$1');
+
+        const box = document.createElement('div');
+        box.innerHTML = html;
+        box.querySelectorAll('img').forEach((img) => {
+          // Photos stored next to the post: show the copy the editor has.
+          const src = img.getAttribute('src') || '';
+          if (!/^(https?:|data:|blob:|\/)/.test(src)) {
+            const asset = getAsset(src.replace(/^\.\//, ''));
+            if (asset && asset.url) img.src = asset.url;
+          }
+          // Image alone in its paragraph with a title → figure + caption.
+          const p = img.parentElement;
+          if (img.title && p && p.tagName === 'P' && p.childNodes.length === 1) {
+            const fig = document.createElement('figure');
+            const cap = document.createElement('figcaption');
+            cap.textContent = img.title;
+            img.removeAttribute('title');
+            fig.append(img, cap);
+            p.replaceWith(fig);
+          }
+        });
+        return box.innerHTML;
+      }
+
+      // The page layout: a copy of src/layouts/Piece.astro.
+      const PostPreview = (collection) => createClass({
+        render() {
+          const { entry, getAsset } = this.props;
+          const data = entry.get('data');
+          const get = (k) => data.get(k);
+          const tags = (get('tags') && get('tags').toJS ? get('tags').toJS() : get('tags')) || [];
+          const body = get('body') || '';
+          const section = SECTIONS[collection];
+
+          return h('div', {},
+            h('header', { className: 'masthead' },
+              h('span', { className: 'wordmark' }, 'jumari', h('span', {}, '.com.au'))),
+            h('article', { className: `piece ${collection}` },
+              h('header', {},
+                h('p', { className: 'eyebrow' },
+                  section.name,
+                  tags.length ? ` · ${tags.join(' · ')}` : '',
+                  get('draft') ? h('span', { className: 'draft' }, ' · Draft') : null),
+                h('h1', {}, get('title') || 'Untitled'),
+                get('description') ? h('p', { className: 'subtitle' }, get('description')) : null,
+                h('p', { className: 'byline' },
+                  h('span', {}, 'Adam Jumari Burgess'),
+                  h('span', {}, longDate(get('date'))),
+                  h('span', {}, readingTime(body)),
+                  get('updated') ? h('span', {}, `Updated ${longDate(get('updated'))}`) : null),
+                // Series: just the label here (the full list of parts is built on the site).
+                get('series') ? h('nav', { className: 'series-preview' },
+                  `Series · ${get('series')}${get('part') ? ` · Part ${get('part')}` : ''}`) : null),
+              h('div', { className: 'prose', dangerouslySetInnerHTML: { __html: renderBody(body, getAsset) } }),
+              h('footer', { className: 'back' }, `← All ${section.name}`)));
+        },
+      });
+
+      CMS.registerPreviewTemplate('notes', PostPreview('notes'));
+      CMS.registerPreviewTemplate('bench', PostPreview('bench'));
     </script>
   </body>
 </html>

@@ -18,6 +18,12 @@ const schema = ({ image }: SchemaContext) =>
     // Optional picture for the Recent writing card (a file next to the post).
     cover: image().optional(),
     coverAlt: z.string().default(''),
+    // Optional: posts with the same series name are grouped together, e.g.
+    //   series: Building a tuneable load
+    //   part: 2
+    // `part` sets the order; without it, parts are ordered by date (oldest first).
+    series: z.string().trim().min(1).optional(),
+    part: z.number().int().positive().optional(),
     // Drafts show up in `npm run dev` but are left out of the live site.
     draft: z.boolean().default(false),
   });

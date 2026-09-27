@@ -8,6 +8,8 @@ date: 2026-09-24
 tags: [Books]
 # cover: ./cover.jpg          # optional card picture (needs the folder layout)
 # coverAlt: What the picture shows
+# series: Building a tuneable load   # optional: same name on each post groups them
+# part: 1                            # optional: order within the series
 draft: true                   # delete this line (or set false) to publish
 ---
 

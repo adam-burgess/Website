@@ -22,7 +22,20 @@ export async function getAllPosts(): Promise<Post[]> {
   return all.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
 
-export const postUrl = (post: Post) => `${SECTIONS[post.collection].path}${post.id}/`;
+// Every post in the same series as `post`, in reading order (by `part`, then by date).
+// Returns an empty list if the post isn't in a series. Can mix both sections.
+export async function getSeries(post: Post): Promise<Post[]> {
+  const name = post.data.series;
+  if (!name) return [];
+  const all = await getAllPosts();
+  return all
+    .filter((p) => p.data.series === name)
+    .sort((a, b) =>
+      (a.data.part ?? Infinity) - (b.data.part ?? Infinity) ||
+      a.data.date.valueOf() - b.data.date.valueOf());
+}
+
+export const postUrl =(post: Post) => `${SECTIONS[post.collection].path}${post.id}/`;
 
 // ~230 words a minute, ignoring code blocks and maths.
 export function readingTime(body = ''): string {
