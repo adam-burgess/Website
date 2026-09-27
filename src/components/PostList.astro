@@ -80,9 +80,10 @@ const { posts } = Astro.props;
   .draft { color: var(--accent); font-size: 0.7em; }
   .empty { color: var(--ink-2); }
 
-  /* Phones: smaller picture, date moves under the text. */
+  /* Phones: no picture, just the text, with the date underneath. */
   @media (max-width: 560px) {
-    a { grid-template-columns: 84px minmax(0, 1fr); gap: 14px; }
-    time { grid-column: 2; margin-top: 0; }
+    a { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .thumb { display: none; }
+    time { margin-top: 0; }
   }
 </style>
