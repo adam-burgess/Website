@@ -39,7 +39,7 @@ astro.config.mjs          site: 'https://jumari.com.au' (no base needed with cus
 public/favicon.svg        logo: "Beam", light tile (teal radiation pattern — main lobe + two side lobes — on a white tile with a thin edge), chosen 2026-09-25; browser-tab icon only
 src/styles/global.css     design tokens (light + dark via prefers-color-scheme), font vars, .wrap, .eyebrow
 src/layouts/Base.astro    <head> (title, description, canonical, favicon, Google Fonts) + Masthead + <slot/> + Footer
-src/components/Masthead.astro   wordmark + nav (logo removed from header 2026-09-27; tab icon only) (Home, Field Notes, Off the Bench), aria-current on active section
+src/components/Masthead.astro   wordmark jumari.com.au + nav (logo removed from header 2026-09-27; tab icon only) (Home, Field Notes, Off the Bench), aria-current on active section
 src/components/Footer.astro     © line + LinkedIn (linkedin.com/in/adam-j-burgess) + AI disclaimer line
 src/pages/index.astro     homepage: hero, Currently, Recent writing (carousel), doors (data arrays in frontmatter)
 src/pages/notes/, off-the-bench/   index.astro (dated list via PostList) + [...slug].astro (one page per post, Piece layout)
