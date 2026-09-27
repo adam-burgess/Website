@@ -3,6 +3,8 @@ title: A first draft
 description: A placeholder to show what an Off the Bench piece looks like. Delete it once you've written the real one.
 date: 2026-09-23
 tags: [Placeholder]
+cover: ./cover.svg
+coverAlt: A pencil drawing a loose line
 draft: true
 ---
 

@@ -5,6 +5,8 @@ date: 2026-08-31
 tags: [RF, PCB, Altium]
 series: Building a tuneable load
 part: 2
+cover: ./cover.svg
+coverAlt: A circuit board trace with a 45 degree bend between two chips
 draft: false
 ---
 

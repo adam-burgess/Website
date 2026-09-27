@@ -3,6 +3,8 @@ title: The weekly review that stuck
 description: I've tried six productivity systems. This is the one that survived a whole semester, and why.
 date: 2026-09-26
 tags: [Productivity]
+cover: ./cover.svg
+coverAlt: A calendar week with Sunday ticked
 draft: false
 ---
 

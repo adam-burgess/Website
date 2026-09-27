@@ -134,6 +134,13 @@
                 // Series: just the label here (the full list of parts is built on the site).
                 get('series') ? h('nav', { className: 'series-preview' },
                   `Series · ${get('series')}${get('part') ? ` · Part ${get('part')}` : ''}`) : null),
+              // Cover picture, same place as on the site.
+              (() => {
+                const cover = get('cover');
+                if (!cover) return null;
+                const asset = getAsset(String(cover).replace(/^\.\//, ''));
+                return h('img', { className: 'cover', src: (asset && asset.url) || cover, alt: get('coverAlt') || '' });
+              })(),
               h('div', { className: 'prose', dangerouslySetInnerHTML: { __html: renderBody(body, getAsset) } }),
               h('footer', { className: 'back' }, `← All ${section.name}`)));
         },

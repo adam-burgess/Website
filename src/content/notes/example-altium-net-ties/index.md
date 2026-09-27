@@ -3,6 +3,8 @@ title: Altium net ties and RF clearance rules
 description: How to join two nets on purpose without the design rule checker fighting you.
 date: 2026-09-05
 tags: [Altium, PCB]
+cover: ./cover.svg
+coverAlt: Two copper areas joined by a narrow net-tie bridge
 draft: false
 ---
 

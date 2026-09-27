@@ -5,6 +5,8 @@ date: 2026-09-20
 tags: [RF, Embedded]
 series: Building a tuneable load
 part: 3
+cover: ./cover.svg
+coverAlt: An antenna sending out radio waves
 draft: false
 ---
 

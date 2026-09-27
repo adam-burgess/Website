@@ -1,6 +1,7 @@
 ---
 // The page every post sits in. Off the Bench pieces get a Substack-style reading
 // column; Field Notes share it but let figures and code run a little wider.
+import { Image } from 'astro:assets';
 import Base from './Base.astro';
 import SeriesBox from './SeriesBox.astro';
 import { SECTIONS, getSeries, longDate, postUrl, readingTime, type Post } from '../posts';
@@ -11,7 +12,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, date, updated, tags, draft } = post.data;
+const { title, description, date, updated, tags, draft, cover, coverAlt } = post.data;
 const section = SECTIONS[post.collection];
 
 // Series: the other parts, and the ones either side of this post.
@@ -38,6 +39,12 @@ const next = here >= 0 && here < parts.length - 1 ? parts[here + 1] : undefined;
       </p>
       {parts.length > 1 && <SeriesBox post={post} parts={parts} />}
     </header>
+
+    {/* The post's cover picture, a little wider than the text. */}
+    {cover && (
+      <Image class="cover" src={cover} alt={coverAlt} widths={[680, 1000, 1400]}
+        sizes="(max-width: 1000px) 100vw, 1000px" loading="eager" />
+    )}
 
     <div class="prose">
       <slot />

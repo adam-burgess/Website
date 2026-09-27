@@ -107,6 +107,16 @@ a { color: var(--accent); }
 
 .piece .prose { margin-top: 36px; }
 
+/* Cover picture at the top of a post: 2:1, a little wider than the text column. */
+.piece .cover {
+  display: block;
+  width: 100%; max-width: calc(var(--measure) + 160px);
+  height: auto; aspect-ratio: 2 / 1; object-fit: cover;
+  margin: 32px auto 0;
+  border-radius: 6px;
+  border: 1px solid var(--hairline);
+}
+
 .piece .back { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--hairline); font-size: 14px; }
 .piece .back a { text-decoration: none; }
 

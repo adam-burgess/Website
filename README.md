@@ -95,7 +95,7 @@ date: 2026-08-31
 tags: [RF, PCB]
 series: Building a tuneable load   # optional: groups posts together
 part: 2                            # optional: order within the series
-cover: ./cover.jpg                 # optional: picture for the home-page card
+cover: ./cover.jpg                 # optional: shown at the top of the post, on its card and in lists
 coverAlt: What the picture shows
 draft: true                        # hidden from the live site until false
 ```

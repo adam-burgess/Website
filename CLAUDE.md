@@ -47,8 +47,9 @@ src/images/portrait.jpg   hero photo (Astro-optimised)
 src/components/Base.astro      <head> + Masthead + slot + Footer; imports site.css
 src/components/Masthead.astro  wordmark jumari.com.au + nav (Home, Field Notes, Off the Bench)
 src/components/Footer.astro    © line + LinkedIn + AI disclaimer
-src/components/Post.astro      post page (was layouts/Piece.astro); imports KaTeX CSS
-src/components/PostList.astro, SeriesBox.astro
+src/components/Post.astro      post page (was layouts/Piece.astro); imports KaTeX CSS; shows `cover` 2:1 under the header, measure+160px wide (.piece .cover in site.css); editor preview shows it too
+src/components/PostList.astro  section list rows: 120px 2:1 cover thumbnail (blank tile if none) · title, series (teal) + tags (grey), description · date; phones: 84px thumb, date under text
+src/components/SeriesBox.astro
 src/pages/index.astro          home page; doors built from SECTION_LIST
 src/pages/[section]/index.astro        both section list pages (/notes/, /off-the-bench/) via getStaticPaths over SECTION_LIST
 src/pages/[section]/[...slug].astro    every post page in both sections
