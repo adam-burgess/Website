@@ -2,10 +2,11 @@
 title: How to write a post
 description: Every formatting feature on the site in one place — links, photos, maths, code, tables and footnotes. Open this file next to the page to see the Markdown behind each one.
 date: 2026-09-24
-tags: [Guide]
+tags:
+  - Guide
 cover: ./diagram.svg
 coverAlt: A teal sine-like curve on a plot
-draft: true
+draft: false
 ---
 
 This is a draft, so it only appears when you run `npm run dev`. Open
@@ -73,10 +74,10 @@ void set_atten(uint8_t steps) {
 - Bullet lists use a dash
 - Numbered lists use `1.`
 
-| Parameter  | Value      |
-|------------|------------|
-| Frequency  | 2.45 GHz   |
-| Impedance  | 50 Ω       |
+| Parameter | Value |
+| --- | --- |
+| Frequency | 2.45 GHz |
+| Impedance | 50 Ω |
 | Array size | 16 elements |
 
 ***
