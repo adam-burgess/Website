@@ -23,6 +23,12 @@ const next = here >= 0 && here < parts.length - 1 ? parts[here + 1] : undefined;
 ---
 <Base title={title} description={description}>
   <article class:list={['piece', post.collection]}>
+    {/* The post's cover picture, first thing on the page, a little wider than the text. */}
+    {cover && (
+      <Image class="cover" src={cover} alt={coverAlt} widths={[680, 1000, 1400]}
+        sizes="(max-width: 1000px) 100vw, 1000px" loading="eager" />
+    )}
+
     <header>
       <p class="eyebrow">
         <a href={section.path}>{section.name}</a>
@@ -40,11 +46,6 @@ const next = here >= 0 && here < parts.length - 1 ? parts[here + 1] : undefined;
       {parts.length > 1 && <SeriesBox post={post} parts={parts} />}
     </header>
 
-    {/* The post's cover picture, a little wider than the text. */}
-    {cover && (
-      <Image class="cover" src={cover} alt={coverAlt} widths={[680, 1000, 1400]}
-        sizes="(max-width: 1000px) 100vw, 1000px" loading="eager" />
-    )}
 
     <div class="prose">
       <slot />

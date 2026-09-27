@@ -107,12 +107,12 @@ a { color: var(--accent); }
 
 .piece .prose { margin-top: 36px; }
 
-/* Cover picture at the top of a post: 2:1, a little wider than the text column. */
+/* Cover picture at the very top of a post, above the title: 2:1, a little wider than the text column. */
 .piece .cover {
   display: block;
   width: 100%; max-width: calc(var(--measure) + 160px);
   height: auto; aspect-ratio: 2 / 1; object-fit: cover;
-  margin: 32px auto 0;
+  margin: 0 auto 36px;
   border-radius: 6px;
   border: 1px solid var(--hairline);
 }

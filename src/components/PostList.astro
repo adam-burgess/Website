@@ -25,12 +25,8 @@ const { posts } = Astro.props;
             </span>
             <span class="text">
               <span class="t">{title}{draft && <span class="draft"> (draft)</span>}</span>
-              {(series || tags.length > 0) && (
-                <span class="meta">
-                  {series && <span class="series">Series · {series}{part && ` · Part ${part}`}</span>}
-                  {tags.length > 0 && <span class="tags">{tags.join(' · ')}</span>}
-                </span>
-              )}
+              {series && <span class="meta series">Series · {series}{part && ` · Part ${part}`}</span>}
+              {tags.length > 0 && <span class="meta tags">{tags.join(' · ')}</span>}
               <span class="d">{description}</span>
             </span>
             <time datetime={date.toISOString()}>{shortDate(date)}</time>
@@ -53,11 +49,11 @@ const { posts } = Astro.props;
     color: var(--ink); text-decoration: none;
   }
 
-  /* Small 2:1 picture, the same shape as the home-page cards. */
+  /* Small 2:1 picture, the same shape as the home-page cards, centred in its row. */
   .thumb {
     display: block;
     aspect-ratio: 2 / 1;
-    margin-top: 4px;
+    align-self: center;   /* sit in the middle of the row, whatever its height */
     overflow: hidden;
     border-radius: 4px;
     border: 1px solid var(--hairline);
@@ -69,9 +65,8 @@ const { posts } = Astro.props;
   .t { font-family: var(--serif); font-size: 21px; line-height: 1.3; }
   a:hover .t { color: var(--accent); }
 
-  /* One line of small labels: the series (teal), then the tags (grey). */
+  /* Small labels, each on its own line: the series (teal), then the tags (grey). */
   .meta {
-    display: flex; flex-wrap: wrap; gap: 2px 14px;
     font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase;
   }
   .series { color: var(--accent); }
