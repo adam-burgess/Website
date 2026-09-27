@@ -1,0 +1,273 @@
+/* ==========================================================================
+   site.css — every shared style on the site, in one file.
+
+   1. Colours, fonts and basics   (every page)
+   2. Post page frame             (title, byline, series links)
+   3. Post text                   (paragraphs, headings, photos, code, maths)
+
+   Styles that belong to one component (the header, the footer, the home page)
+   live inside that component's own .astro file instead.
+   The writing editor's preview loads this file too, so posts look the same there.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Colours, fonts and basics
+   ========================================================================== */
+
+/* ---------- Design tokens (light) ---------- */
+:root {
+  --ground:   #f5f7f7;
+  --surface:  #ffffff;
+  --ink:      #11171a;
+  --ink-2:    #4d585e;
+  --ink-3:    #79868c;
+  --hairline: #d7dedf;
+  --accent:   #0f6e76;
+
+  --serif: Spectral, Georgia, "Times New Roman", serif;
+  --sans:  "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:  "IBM Plex Mono", ui-monospace, monospace;
+
+  --wrap: 1040px;
+  color-scheme: light;
+}
+
+/* ---------- Design tokens (dark, follows the OS setting) ---------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground:   #0d1113;
+    --surface:  #141a1c;
+    --ink:      #eaeff0;
+    --ink-2:    #a3b0b4;
+    --ink-3:    #77858a;
+    --hairline: #242f33;
+    --accent:   #5fd3db;
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; }
+
+a { color: var(--accent); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ---------- Shared helpers ---------- */
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: 24px; }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+
+/* ==========================================================================
+   2. Post page frame (used by src/components/Post.astro)
+   ========================================================================== */
+
+.piece { padding-inline: 24px; padding-block: 54px 0; }
+.piece > header, .piece > .back { max-width: var(--measure); margin-inline: auto; }
+
+.piece .eyebrow { margin: 0; }
+.piece .eyebrow a { color: inherit; text-decoration: none; }
+.piece .eyebrow a:hover { color: var(--accent); }
+.piece .draft { color: var(--accent); }
+
+.piece h1 {
+  margin: 14px 0 12px;
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(32px, 5vw, 44px); line-height: 1.12; letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.piece .subtitle { margin: 0; font-family: var(--serif); font-size: 21px; line-height: 1.45; color: var(--ink-2); }
+
+.piece .byline {
+  display: flex; flex-wrap: wrap; gap: 4px 18px;
+  margin: 26px 0 0; padding-block: 12px;
+  border-block: 1px solid var(--hairline);
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.02em; color: var(--ink-3);
+}
+.piece .byline span:first-child { color: var(--ink); }
+
+.piece .prose { margin-top: 36px; }
+
+.piece .back { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--hairline); font-size: 14px; }
+.piece .back a { text-decoration: none; }
+
+/* Previous / next links at the end of a post that's part of a series. */
+.piece .series-nav {
+  max-width: var(--measure); margin: 48px auto 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;
+}
+.piece .series-nav a {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--hairline); border-radius: 6px;
+  font-family: var(--serif); font-size: 18px; line-height: 1.3;
+  color: var(--ink); text-decoration: none;
+}
+.piece .series-nav a:hover { border-color: var(--accent); color: var(--accent); }
+.piece .series-nav span {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+}
+.piece .series-nav .next { grid-column: 2; text-align: right; }
+@media (max-width: 640px) {
+  .piece .series-nav { grid-template-columns: 1fr; }
+  .piece .series-nav .next { grid-column: 1; }
+}
+
+
+/* ==========================================================================
+   3. Post text: everything you write in a post (inside .prose)
+   ========================================================================== */
+
+.piece {
+  --measure: 680px;      /* reading column */
+  --wide: 680px;         /* figures, code and tables */
+}
+.piece.notes { --wide: 880px; }  /* Field Notes let figures and code run wider */
+
+/* Every block sits in the reading column... */
+.prose > * { max-width: var(--measure); margin-inline: auto; }
+/* ...except these, which can use the wider track. */
+.prose > figure,
+.prose > pre,
+.prose > table,
+.prose > .wide,
+.prose > .katex-display { max-width: var(--wide); }
+
+/* ---------- Text ---------- */
+.prose {
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.7;
+}
+.piece.notes .prose { font-size: 19px; }
+.prose p { margin-block: 0 1.25em; }   /* space between paragraphs, no indents */
+
+.prose h2, .prose h3, .prose h4 {
+  font-family: var(--sans); font-weight: 600; line-height: 1.25;
+  margin-block: 2em 0.6em;
+}
+.prose h2 { font-size: 26px; }
+.prose h3 { font-size: 21px; }
+.prose h4 { font-size: 18px; }
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.prose a:hover { text-decoration-thickness: 2px; }
+
+.prose ul, .prose ol { padding-left: 1.3em; margin-block: 0 1.25em; }
+.prose li { margin-block: 0.3em; }
+.prose li::marker { color: var(--ink-3); }
+
+/* Blockquote: left rule, not italics. */
+.prose blockquote {
+  margin-block: 1.6em;
+  padding: 0 0 0 22px;
+  border-left: 3px solid var(--accent);
+  color: var(--ink-2);
+}
+.prose blockquote p:last-child { margin-bottom: 0; }
+
+/* Section break: a line of *** or --- in Markdown becomes a centred mark. */
+.prose hr { border: 0; margin-block: 2.4em; text-align: center; }
+.prose hr::after {
+  content: '· · ·';
+  font-family: var(--serif); font-size: 22px; letter-spacing: 0.5em; color: var(--ink-3);
+}
+
+/* ---------- Figures ---------- */
+.prose img { display: block; max-width: 100%; height: auto; margin-inline: auto; border-radius: 3px; }
+.prose > p > img { margin-block: 1.6em; }        /* uncaptioned image */
+.prose figure { margin-block: 2em; }
+.prose figcaption {
+  margin-top: 10px;
+  font-family: var(--sans); font-size: 14px; line-height: 1.5; color: var(--ink-3);
+  text-align: center;
+}
+
+/* ---------- Code ---------- */
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.82em;
+}
+/* Inline `code` */
+.prose :not(pre) > code {
+  padding: 0.12em 0.36em;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ground) 88%, var(--ink));
+}
+/* Code blocks (coloured by Shiki at build time) */
+.prose pre {
+  margin-block: 1.6em;
+  padding: 18px 20px;
+  overflow-x: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.prose pre code { font-size: inherit; }
+
+/* Shiki writes both themes' colours as variables; switch to dark with the OS. */
+@media (prefers-color-scheme: dark) {
+  .prose .astro-code,
+  .prose .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+  }
+}
+
+/* ---------- Maths ---------- */
+.prose .katex { font-size: 1.05em; }
+.prose .katex-display {
+  margin-block: 1.4em;
+  overflow-x: auto;        /* long equations scroll instead of breaking the page */
+  overflow-y: hidden;
+  padding-block: 4px;
+}
+
+/* ---------- Tables ---------- */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: 1.6em;
+  font-family: var(--sans); font-size: 15px; line-height: 1.5;
+}
+.prose th, .prose td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--hairline); text-align: left; }
+.prose th {
+  font-family: var(--mono); font-weight: 400; font-size: 11px;
+  letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-3);
+}
+
+/* ---------- Footnotes ([^1] in Markdown) ---------- */
+.prose .footnotes { margin-top: 3em; font-size: 16px; color: var(--ink-2); }
+.prose .footnotes h2 { font-size: 13px; font-family: var(--mono); font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; }
+.prose sup a { text-decoration: none; }
+
+@media (max-width: 640px) {
+  .prose { font-size: 18.5px; }
+  .piece.notes .prose { font-size: 18px; }
+  .prose pre { font-size: 14px; padding: 14px 16px; }
+}
