@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#eef3f3"/>
+  <path d="M40 120 H330 C380 120 385 330 400 330 S420 120 470 120 H760" fill="none" stroke="#0f6e76" stroke-width="6" stroke-linecap="round"/>
+  <text x="400" y="370" text-anchor="middle" font-family="monospace" font-size="20" fill="#79868c">2.45 GHz</text>
+</svg>

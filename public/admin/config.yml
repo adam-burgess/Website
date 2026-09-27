@@ -39,7 +39,7 @@ collections:
     format: frontmatter
     create: true
     slug: '{{title}}'
-    summary: '{{title}} — {{date}}{{draft | ternary(" (draft)", "")}}'
+    summary: "{{title}} — {{date}}{{draft | ternary(' (draft)', '')}}"
     sortable_fields: [date, title]
     preview_path: /notes/{{slug}}/
     # Field list, defined once here (&fields) and reused by Off the Bench (*fields).
@@ -106,7 +106,7 @@ collections:
     format: frontmatter
     create: true
     slug: '{{title}}'
-    summary: '{{title}} — {{date}}{{draft | ternary(" (draft)", "")}}'
+    summary: "{{title}} — {{date}}{{draft | ternary(' (draft)', '')}}"
     sortable_fields: [date, title]
     preview_path: /off-the-bench/{{slug}}/
     fields: *fields
