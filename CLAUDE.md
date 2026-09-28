@@ -42,7 +42,7 @@ public/favicon.svg        logo: "Beam", light tile; browser-tab icon only
 public/admin/             Sveltia CMS (index.html: editor + preview template; config.yml: fields)
 src/site.css              ALL shared CSS: 1 tokens/fonts/basics, 2 post frame (+ series nav), 3 post text (.prose)
 src/posts.ts              SECTIONS (name, single, slug, path, eyebrow, blurb) + SECTION_LIST; getPosts/getAllPosts/getSeries/postUrl/readingTime/dates
-src/content.config.ts     collections + frontmatter schema
+src/content.config.ts     one `posts` collection (src/content/posts/) + frontmatter schema; `section` field picks notes/bench
 src/images/portrait.jpg   hero photo (Astro-optimised)
 src/components/Base.astro      <head> + Masthead + slot + Footer; imports site.css
 src/components/Masthead.astro  wordmark jumari.com.au + nav (Home, Field Notes, Off the Bench)
@@ -58,13 +58,13 @@ src/pages/admin/preview.css.ts         /admin/preview.css = site.css + editor-on
 ```
 
 ## Writing posts
-- Posts live in `src/content/notes/` (Field Notes, URL /notes/<name>/) and `src/content/bench/` (Off the Bench, URL /off-the-bench/<name>/). Copy `_template.md` in either folder; files starting with `_` are ignored.
+- **All posts live in `src/content/posts/` (since 2026-09-28; was two folders, notes/ and bench/).** Frontmatter `section: notes` → Field Notes, URL /notes/<name>/; `section: bench` → Off the Bench, URL /off-the-bench/<name>/. Changing `section` moves a post (URL changes, no redirect). Folder names must be unique across both sections. posts.ts: `getAllPosts()` reads the collection, `getPosts(section)` filters it, `postUrl` uses `data.section`; nothing uses `post.collection` any more. Copy `src/content/posts/_template.md`; files starting with `_` are ignored. The site still presents two named sections (Locked decisions); only storage is shared.
+- **Editor:** config.yml keeps two collections (`notes`, `bench`), both `folder: src/content/posts` with `filter: { field: section, value: … }`. Each has its own Section select field (default = its own section; Sveltia doesn't fill the filter value on new entries). The other fields are YAML-anchored once in `notes` (`&title` …) and aliased in `bench` (`*title` …): add a new field in both lists. Moving = Details → Section → Save. The preview template reads `section` from the entry, not the collection.
 - A single file (`name.md`) or a folder (`name/index.md` + its images). Use the folder form when the post has photos.
-- Frontmatter: title, description, date, updated?, tags[], series?, part?, cover? (image next to the post, used on the home-page card), coverAlt, coverCrop? ("x y w" in %: the 2:1 part of the cover to show, set with the editor's crop tool; default = largest centred 2:1), draft (drafts show in `npm run dev` only).
+- Frontmatter: section (notes | bench), title, description, date, updated?, tags[], series?, part?, cover? (image next to the post, used on the home-page card), coverAlt, coverCrop? ("x y w" in %: the 2:1 part of the cover to show, set with the editor's crop tool; default = largest centred 2:1), draft (drafts show in `npm run dev` only).
 - `.md` or `.mdx` (MDX when a post needs components).
 - Features: GFM (tables, footnotes, autolinks), KaTeX maths (`$…$`, `$$…$$`), Shiki code (github-light/dark, follows OS theme), images optimised by Astro, `![alt](./x.jpg "Caption")` -> captioned figure, `***` -> centred section break.
 - Astro 7's default Markdown engine (Sätteri) doesn't run remark/rehype plugins, so astro.config.mjs sets `markdown.processor: unified({...})` from `@astrojs/markdown-remark`.
-- Demo of every feature: `src/content/notes/how-to-write-a-post/` (draft). Placeholder: `src/content/bench/first-draft.md` (draft).
 - Home-page Recent writing = newest 6 posts across both collections.
 - **Series (2026-09-27):** optional frontmatter `series` (name; exact match groups posts, across both sections) and `part` (int, order; else by date oldest first). `getSeries()` in posts.ts. Post page shows SeriesBox (src/components/SeriesBox.astro: "Part n of N · name" + numbered list) under the byline, and previous/next cards at the bottom (styles in site.css). PostList shows a "Series · name · Part n" line. Editor has Series + Part number fields; its preview shows the series label only.
 - Restart `npm run dev` after changing astro.config.mjs or content.config.ts.

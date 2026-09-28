@@ -13,16 +13,16 @@ interface Props {
 
 const { post } = Astro.props;
 const { title, description, date, updated, tags, draft, cover, coverAlt, coverCrop } = post.data;
-const section = SECTIONS[post.collection];
+const section = SECTIONS[post.data.section];
 
 // Series: the other parts, and the ones either side of this post.
 const parts = await getSeries(post);
-const here = parts.findIndex((p) => p.id === post.id && p.collection === post.collection);
+const here = parts.findIndex((p) => p.id === post.id);
 const prev = here > 0 ? parts[here - 1] : undefined;
 const next = here >= 0 && here < parts.length - 1 ? parts[here + 1] : undefined;
 ---
 <Base title={title} description={description}>
-  <article class:list={['piece', post.collection]}>
+  <article class:list={['piece', post.data.section]}>
     {/* The post's cover picture, first thing on the page, a little wider than the text. */}
     {cover && (
       <Cover class="cover" src={cover} alt={coverAlt} crop={coverCrop} widths={[680, 1000, 1400]}

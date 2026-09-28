@@ -26,12 +26,16 @@ output:
   # so the site's schema doesn't reject an empty value.
   omit_empty_optional_fields: true
 
+# Both lists read the same folder, src/content/posts/. Each post's Section field
+# (`section:` in the file) decides which list it shows in: the `filter` lines below.
+# Change a post's Section and save to move it to the other list and section.
 collections:
   - name: notes
     label: Field Notes
     label_singular: Field note
-    folder: src/content/notes
-    # One folder per post (notes/<name>/index.md) so its photos live beside it.
+    folder: src/content/posts
+    filter: { field: section, value: notes }
+    # One folder per post (posts/<name>/index.md) so its photos live beside it.
     path: '{{slug}}/index'
     media_folder: ''
     public_folder: ''
@@ -42,59 +46,78 @@ collections:
     summary: "{{title}} — {{date}}{{draft | ternary(' (draft)', '')}}"
     sortable_fields: [date, title]
     preview_path: /notes/{{slug}}/
-    # Field list, defined once here (&fields) and reused by Off the Bench (*fields).
-    fields: &fields
-      - { name: title, label: Title, widget: string }
-      - name: description
+    # Each field is named here (&title, &date, …) and reused by Off the Bench (*title, *date, …).
+    # Only Section differs: its starting value is this list's section.
+    fields:
+      - name: section
+        label: Section
+        widget: select
+        options: &sections
+          - { label: Field Notes, value: notes }
+          - { label: Off the Bench, value: bench }
+        default: notes
+        hint: Change this and save to move the post to the other section. Its web address changes too.
+      - &title { name: title, label: Title, widget: string }
+      - &description
+        name: description
         label: Description
         widget: text
         hint: One or two sentences. Shown under the title and on the home-page card.
-      - name: date
+      - &date
+        name: date
         label: Date
         widget: datetime
         format: YYYY-MM-DD
         time_format: false
-      - name: updated
+      - &updated
+        name: updated
         label: Updated
         widget: datetime
         format: YYYY-MM-DD
         time_format: false
         required: false
         hint: Only if you've changed the post after publishing.
-      - name: tags
+      - &tags
+        name: tags
         label: Tags
         widget: list
         required: false
         hint: Short topic labels, e.g. RF, Books. Press Enter or comma between them.
-      - name: cover
+      - &cover
+        name: cover
         label: Card picture
         widget: image
         required: false
         hint: Optional. Shown at the top of the post and on its home-page card, always as a 2:1 (landscape) crop. Any shape works; use one at least 1600 px wide and pick the crop below.
-      - name: coverCrop
+      - &coverCrop
+        name: coverCrop
         label: Card picture crop
         widget: cover-crop
         required: false
         hint: Drag the box to choose what's shown; drag its corner to zoom in or out. Leave it alone to use the centre.
-      - { name: coverAlt, label: Card picture description, widget: string, required: false }
-      - name: series
+      - &coverAlt { name: coverAlt, label: Card picture description, widget: string, required: false }
+      - &series
+        name: series
         label: Series
         widget: string
         required: false
         hint: Optional. Posts with exactly the same series name are grouped, with a contents box on each.
-      - name: part
+      - &part
+        name: part
         label: Part number
         widget: number
         value_type: int
         min: 1
         required: false
         hint: Optional. Order within the series; leave empty to order by date.
-      - name: draft
+      - &draft
+        name: draft
         label: Draft
         widget: boolean
         default: true
         hint: Drafts are saved to GitHub but hidden on the live site. Turn off to publish.
-      - name: body
+      - &body
+        name: body
         label: Body
         widget: richtext
         modes: [rich_text, raw]
@@ -103,7 +126,8 @@ collections:
   - name: bench
     label: Off the Bench
     label_singular: Off the Bench piece
-    folder: src/content/bench
+    folder: src/content/posts
+    filter: { field: section, value: bench }
     path: '{{slug}}/index'
     media_folder: ''
     public_folder: ''
@@ -114,4 +138,22 @@ collections:
     summary: "{{title}} — {{date}}{{draft | ternary(' (draft)', '')}}"
     sortable_fields: [date, title]
     preview_path: /off-the-bench/{{slug}}/
-    fields: *fields
+    fields:
+      - name: section
+        label: Section
+        widget: select
+        options: *sections
+        default: bench
+        hint: Change this and save to move the post to the other section. Its web address changes too.
+      - *title
+      - *description
+      - *date
+      - *updated
+      - *tags
+      - *cover
+      - *coverCrop
+      - *coverAlt
+      - *series
+      - *part
+      - *draft
+      - *body

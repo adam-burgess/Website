@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { post, parts } = Astro.props;
-const index = parts.findIndex((p) => p.id === post.id && p.collection === post.collection);
+const index = parts.findIndex((p) => p.id === post.id);
 ---
 <nav class="series" aria-label={`Series: ${post.data.series}`}>
   <p class="label">Part {index + 1} of {parts.length} · <span>{post.data.series}</span></p>

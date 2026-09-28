@@ -18,8 +18,12 @@ There are two ways. Both do the same thing.
 GitHub access token, pick a section, and click **New**. Press **Save** to publish.
 Leave **Draft** switched on while you're still writing; drafts are saved but hidden.
 
-**In VS Code:** copy `_template.md` from `src/content/notes/` or `src/content/bench/`,
-fill in the details at the top, and write underneath. Commit and push to publish.
+**In VS Code:** copy `src/content/posts/_template.md`, fill in the details at the top
+(including which section), and write underneath. Commit and push to publish.
+
+**Moving a post to the other section:** in the editor, click **Details**, change
+**Section**, and press **Save**. (In VS Code: change the `section:` line.) Its web
+address changes with it, e.g. /notes/my-post/ → /off-the-bench/my-post/.
 
 Want to see it before it goes live? Run `npm run dev` in the terminal and open
 http://localhost:4321. Drafts show up there too.
@@ -35,8 +39,7 @@ Website/
 │
 ├── src/                    ← the website itself
 │   ├── content/          ✏️ YOUR POSTS
-│   │   ├── notes/            Field Notes: one folder per post (index.md + its photos)
-│   │   └── bench/            Off the Bench: same layout
+│   │   └── posts/            both sections: one folder per post (index.md + its photos)
 │   │
 │   ├── pages/            ✏️ one file per kind of page
 │   │   ├── index.astro       the home page (intro, "Currently", recent writing)
@@ -89,6 +92,7 @@ automatically and aren't saved to GitHub.
 ## The details at the top of a post
 
 ```yaml
+section: notes                     # notes = Field Notes, bench = Off the Bench
 title: The first board
 description: One or two sentences, shown under the title and on cards.
 date: 2026-08-31
@@ -101,5 +105,4 @@ draft: true                        # hidden from the live site until false
 ```
 
 In the text: `$…$` for maths, three backticks for code, `![what it shows](./photo.jpg "Caption")`
-for a captioned photo, and `***` for a section break. The post
-`src/content/notes/how-to-write-a-post/` shows every feature.
+for a captioned photo, and `***` for a section break.

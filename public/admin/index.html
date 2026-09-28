@@ -156,18 +156,20 @@
         return box.innerHTML;
       }
 
-      // The page layout: a copy of src/layouts/Piece.astro.
-      const PostPreview = (collection) => createClass({
+      // The page layout: a copy of src/components/Post.astro.
+      const PostPreview = createClass({
         render() {
           const { entry, getAsset } = this.props;
           const data = entry.get('data');
           const get = (k) => data.get(k);
           const tags = (get('tags') && get('tags').toJS ? get('tags').toJS() : get('tags')) || [];
           const body = get('body') || '';
-          const section = SECTIONS[collection];
+          // Follows the Section field, so it changes as soon as you pick the other section.
+          const key = SECTIONS[get('section')] ? get('section') : 'notes';
+          const section = SECTIONS[key];
 
           return h('div', {},
-            h('article', { className: `piece ${collection}` },
+            h('article', { className: `piece ${key}` },
               // Cover picture, same place as on the site.
               (() => {
                 const cover = get('cover');
@@ -201,8 +203,8 @@
         },
       });
 
-      CMS.registerPreviewTemplate('notes', PostPreview('notes'));
-      CMS.registerPreviewTemplate('bench', PostPreview('bench'));
+      CMS.registerPreviewTemplate('notes', PostPreview);
+      CMS.registerPreviewTemplate('bench', PostPreview);
 
       // ---------- "Card picture crop" field ----------
       // Shows the card picture with a 2:1 box on it. Drag the box to move it, drag

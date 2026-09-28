@@ -18,13 +18,13 @@ const currently = [
 // Recent writing: the newest posts from both sections, as a sideways-scrolling row
 const recent = (await getAllPosts()).slice(0, 6).map((post) => ({
   title: post.data.title,
-  tags: [SECTIONS[post.collection].single, ...post.data.tags].join(' · '),
+  tags: [SECTIONS[post.data.section].single, ...post.data.tags].join(' · '),
   text: post.data.description,
   href: postUrl(post),
   cover: post.data.cover,
   coverAlt: post.data.coverAlt,
   coverCrop: post.data.coverCrop,
-  label: SECTIONS[post.collection].single,
+  label: SECTIONS[post.data.section].single,
 }));
 
 // The two links at the bottom of the page. Their text comes from SECTIONS in src/posts.ts.
@@ -41,7 +41,7 @@ const doors = SECTION_LIST.map((s) => ({ eyebrow: s.eyebrow, title: s.name, href
           craving for me. So here you can find write ups on my attempts to solve that.
         </p>
         <p class="intro">
-          I hope you can find some value for yourself in the writing I share here. 
+          I hope that the topics I writ
         </p>
       </div>
       <!-- Photo lives in src/images/ so Astro resizes and compresses it at build time. -->

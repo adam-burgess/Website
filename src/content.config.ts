@@ -1,13 +1,15 @@
-// Defines the two writing collections and what every post must have at the top
+// Defines the posts collection and what every post must have at the top
 // (its "frontmatter"). If a post is missing a field or has the wrong type,
 // the build stops and tells you which file and which field.
 import { defineCollection, type SchemaContext } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
-// Both collections share one schema.
 const schema = ({ image }: SchemaContext) =>
   z.object({
+    // Which section the post is in: notes = Field Notes, bench = Off the Bench.
+    // Change it to move the post (its web address changes with it).
+    section: z.enum(['notes', 'bench']),
     title: z.string(),
     // One or two sentences. Used as the subtitle, on cards, and in search results.
     description: z.string(),
@@ -32,16 +34,12 @@ const schema = ({ image }: SchemaContext) =>
     draft: z.boolean().default(false),
   });
 
-// Each post is a .md or .mdx file (or a folder with index.md/mdx plus its images).
-// The file or folder name becomes the URL: notes/tuneable-load.mdx -> /notes/tuneable-load/
-const notes = defineCollection({
-  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/notes' }),
+// Every post, from both sections, lives in src/content/posts/: a .md or .mdx file
+// (or a folder with index.md/mdx plus its images). The file or folder name becomes
+// the end of the URL: posts/tuneable-load.mdx with `section: notes` -> /notes/tuneable-load/
+const posts = defineCollection({
+  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/posts' }),
   schema,
 });
 
-const bench = defineCollection({
-  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/bench' }),
-  schema,
-});
-
-export const collections = { notes, bench };
+export const collections = { posts };
