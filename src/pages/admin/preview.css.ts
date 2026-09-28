@@ -3,11 +3,8 @@
 // preview always matches the real post page with nothing to keep in sync by hand.
 import siteCss from '../../site.css?raw';
 
-// A copy of the site header (wordmark only; the nav isn't clickable in the preview).
-const mastheadCss = `
-.masthead { max-width: var(--wrap); margin: 0 auto; padding: 26px 24px 0; }
-.masthead .wordmark { font-family: var(--mono); font-size: 13px; letter-spacing: 0.02em; color: var(--ink); }
-.masthead .wordmark span { color: var(--ink-3); }
+// The preview's series label (the site builds a full list of parts instead).
+const editorCss = `
 .series-preview {
   max-width: var(--measure); margin: 28px auto 0; padding: 12px 20px;
   border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0;
@@ -17,7 +14,7 @@ const mastheadCss = `
 `;
 
 export function GET() {
-  return new Response([siteCss, mastheadCss].join('\n'), {
+  return new Response([siteCss, editorCss].join('\n'), {
     headers: { 'Content-Type': 'text/css; charset=utf-8' },
   });
 }
