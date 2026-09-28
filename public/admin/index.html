@@ -10,6 +10,28 @@
     <meta name="robots" content="noindex" />
     <title>Write · jumari.com.au</title>
     <style>
+      /* Space between the Body box's left/right edges and the words. This is the starting
+         value; dragging the box's inside edge changes it (script below, saved per browser). */
+      :root { --body-side-padding: 24px; }
+      /* Rich text mode (.lexical-root) and Markdown mode (textarea + its hidden sizing copy, .clone).
+         :not(.lexical-root *) skips boxes inside the body, e.g. the Maths block's LaTeX box. */
+      .pane[data-mode='edit'] .field[data-key-path='body'] :is(.lexical-root, .text-area textarea, .text-area .clone):not(.lexical-root *) {
+        padding-inline: var(--body-side-padding);
+      }
+      /* While hovering near that edge (pad-hover) or dragging it (pad-drag): ↔ cursor and
+         a faint line on each side where the words start. */
+      :is(html.pad-hover, html.pad-drag) .pane[data-mode='edit'] .field[data-key-path='body'] :is(.lexical-root, .text-area textarea):not(.lexical-root *) {
+        --p: var(--body-side-padding);
+        --line: color-mix(in srgb, currentColor 30%, transparent);
+        cursor: col-resize;
+        background-image: linear-gradient(to right,
+          transparent calc(var(--p) - 1px), var(--line) 0 var(--p),
+          transparent 0 calc(100% - var(--p)), var(--line) 0 calc(100% - var(--p) + 1px),
+          transparent 0);
+      }
+      html.pad-drag, html.pad-drag * { cursor: col-resize !important; user-select: none !important; }
+      html.pad-drag .field[data-key-path='body'] .text-area :is(textarea, .clone) { transition: none !important; }
+
       /* Details / Body switch in the editor's "Edit" header (script at the bottom).
          Body view hides every field except Body and stretches Body to the window. */
       .view-switch { display: flex; gap: 2px; margin-left: 16px; padding: 2px; border-radius: 6px; background: rgba(127, 127, 127, 0.15); }
@@ -322,6 +344,61 @@
           apply();
         }).observe(document.body, { childList: true, subtree: true });
         apply();
+      })();
+
+      // ---------- Body side padding: drag it ----------
+      // Point at the space inside the Body box's left or right edge, then drag in or out.
+      // Both sides move together. The width is remembered in this browser.
+      (() => {
+        const KEY = 'body-side-padding';
+        const BOX = '.pane[data-mode="edit"] .field[data-key-path="body"] :is(.lexical-root, .text-area textarea):not(.lexical-root *)';
+        const html = document.documentElement;
+        const set = (px) => html.style.setProperty('--body-side-padding', `${px}px`);
+        try { const saved = Number(localStorage.getItem(KEY)); if (saved > 0) set(saved); } catch {}
+
+        // Is the pointer in the Body box's left or right padding? (clientLeft = border width)
+        const edgeAt = (e) => {
+          const box = e.target.closest?.(BOX);
+          if (!box) return null;
+          const r = box.getBoundingClientRect();
+          const pad = parseFloat(getComputedStyle(box).paddingLeft);
+          if (e.clientX < r.left + box.clientLeft + pad) return { box, side: 'left', pad };
+          if (e.clientX > r.right - box.clientLeft - pad) return { box, side: 'right', pad };
+          return null;
+        };
+
+        document.addEventListener('pointermove', (e) => {
+          if (!html.classList.contains('pad-drag')) html.classList.toggle('pad-hover', !!edgeAt(e));
+        }, true);
+
+        // Capture phase (the `true`), so this runs before the editor's own click handling.
+        document.addEventListener('pointerdown', (e) => {
+          const edge = e.button === 0 && edgeAt(e);
+          if (!edge) return;
+          e.preventDefault();
+          e.stopPropagation();
+          const x0 = e.clientX;
+          const max = edge.box.clientWidth * 0.4; // always leave room for the words
+          let pad = edge.pad;
+          html.classList.add('pad-drag');
+          const move = (ev) => {
+            const inward = edge.side === 'left' ? ev.clientX - x0 : x0 - ev.clientX;
+            pad = Math.round(Math.min(Math.max(edge.pad + inward, 8), max));
+            set(pad);
+          };
+          const up = () => {
+            window.removeEventListener('pointermove', move);
+            window.removeEventListener('pointerup', up);
+            html.classList.remove('pad-drag');
+            try { localStorage.setItem(KEY, pad); } catch {}
+          };
+          window.addEventListener('pointermove', move);
+          window.addEventListener('pointerup', up);
+        }, true);
+        // Don't let the press also move the text cursor.
+        document.addEventListener('mousedown', (e) => {
+          if (html.classList.contains('pad-drag')) { e.preventDefault(); e.stopPropagation(); }
+        }, true);
       })();
     </script>
   </body>
