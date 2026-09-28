@@ -45,7 +45,7 @@ src/posts.ts              SECTIONS (name, single, slug, path, eyebrow, blurb) + 
 src/content.config.ts     collections + frontmatter schema
 src/images/portrait.jpg   hero photo (Astro-optimised)
 src/components/Base.astro      <head> + Masthead + slot + Footer; imports site.css
-src/components/Masthead.astro  wordmark jumari.com.au + nav (Home, Field Notes, Off the Bench)
+src/components/Masthead.astro  nav only, right-aligned (Home, Field Notes, Off the Bench); wordmark removed 2026-09-28
 src/components/Footer.astro    © line + LinkedIn + AI disclaimer
 src/components/Post.astro      post page (was layouts/Piece.astro); imports KaTeX CSS; shows `cover` 2:1 at the very top, above the title, measure+160px wide (.piece .cover in site.css); editor preview shows it too
 src/components/PostList.astro  section list rows: 120px 2:1 cover thumbnail (blank tile if none) · title, series (teal) + tags (grey), description · date; phones: no thumbnail, date under text
@@ -79,7 +79,7 @@ src/pages/admin/preview.css.ts         /admin/preview.css = site.css + editor-on
 
 ## Homepage (prototype v3, approved)
 Prototype: https://claude.ai/artifact/MXZv6D1XsuEQKD7gMgdHHZ
-1. Masthead: wordmark `jumari.com.au` (".com.au" in ink-3) + nav
+1. Masthead: nav only, right-aligned (wordmark `jumari.com.au` removed 2026-09-28)
 2. Hero: headline "Hi! / I'm Adam *Jumari* Burgess." (Spectral; name kept on one line beside the photo, font scales to fit, max 52px; Jumari italic in accent; "Hi! 👋" is `.hi`, 1.3em of that) + two first-person paragraphs + 4:5 portrait slot on the right (grid: 1fr / 300px)
 3. "Currently": 3-row definition list — Research / Next / Reading (Teaching removed 2026-09-24) (mono uppercase dt, hairline rules)
 4. "Recent writing" (modelled on hkk.fyi's Lab): bold Plex Sans heading + rule to the right edge; intro line with ←/→ arrow buttons; sideways-scrolling, snap-aligned track showing 2 cards at a time (85% width, one at a time, on phones). Card = 2:1 preview (image or placeholder), bold title, accent mono tags, blurb, solid accent "Read →" button; tinted background, 1.5px border. Ends with a dashed "Next up" slot. Data in the `recent` array in index.astro; small inline script drives the arrows.

@@ -1,5 +1,5 @@
 ---
-// Wordmark + main navigation. Highlights the section you're in.
+// Main navigation, top right. Highlights the section you're in.
 const links = [
   { href: '/',        label: 'Home' },
   { href: '/notes/',  label: 'Field Notes' },
@@ -12,7 +12,6 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
 ---
 <header class="masthead">
   <div class="wrap">
-    <a class="wordmark" href="/"><span class="name">jumari<span>.com.au</span></span></a>
     <nav aria-label="Main">
       {links.map(({ href, label }) => (
         <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>
@@ -24,17 +23,9 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
 <style>
   /* Styles in an .astro file are scoped: they only affect this component. */
   .wrap {
-    display: flex; flex-wrap: wrap; align-items: center;
-    justify-content: space-between; gap: 12px 28px;
+    display: flex; justify-content: flex-end;
     padding-block: 26px 0;
   }
-  .wordmark {
-    display: inline-flex; align-items: center; gap: 10px;
-    font-family: var(--mono);
-    font-size: 13px; letter-spacing: 0.02em;
-    color: var(--ink); text-decoration: none;
-  }
-  .name span { color: var(--ink-3); }
   nav { display: flex; gap: 22px; flex-wrap: wrap; }
   nav a {
     font-size: 14px; color: var(--ink-2); text-decoration: none;
