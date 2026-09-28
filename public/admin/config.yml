@@ -70,7 +70,12 @@ collections:
         label: Card picture
         widget: image
         required: false
-        hint: Optional. Shown at the top of the post and on its home-page card. Use a 2:1 (landscape) photo, e.g. 1600 × 800 px; other shapes are cropped to 2:1 from the centre.
+        hint: Optional. Shown at the top of the post and on its home-page card, always as a 2:1 (landscape) crop. Any shape works; use one at least 1600 px wide and pick the crop below.
+      - name: coverCrop
+        label: Card picture crop
+        widget: cover-crop
+        required: false
+        hint: Drag the box to choose what's shown; drag its corner to zoom in or out. Leave it alone to use the centre.
       - { name: coverAlt, label: Card picture description, widget: string, required: false }
       - name: series
         label: Series

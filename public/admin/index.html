@@ -21,7 +21,21 @@
       html.body-view .pane[data-mode='edit'] .field[data-key-path='body'] { flex: 1 0 auto; display: flex; flex-direction: column; }
       html.body-view .pane[data-mode='edit'] .field[data-key-path='body'] :is(.field-wrapper, .text-editor) { flex: 1 0 auto; display: flex; flex-direction: column; }
       html.body-view .pane[data-mode='edit'] .field[data-key-path='body'] :is(.lexical-root, .text-area) { flex: 1 0 auto; }
-      html.body-view .pane[data-mode='edit'] .field[data-key-path='body'] > * { width: 100%; box-sizing: border-box; }
+      html.body-view .pane[data-mode='edit'] .field[data-key-path='body'] > * { width: 100%; max-width: none; box-sizing: border-box; }
+      html.body-view .pane[data-mode='edit'] .header .toolbar { max-width: none; }
+
+      /* "Card picture crop" field: the photo with a draggable 2:1 box on it (script below). */
+      .crop-tool { max-width: 640px; }
+      .crop-stage { position: relative; overflow: hidden; border-radius: 4px; user-select: none; touch-action: none; }
+      .crop-stage img { display: block; width: 100%; height: auto; pointer-events: none; }
+      .crop-box { position: absolute; box-sizing: border-box; border: 2px solid #fff; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55); cursor: move; }
+      .crop-box::before, .crop-box::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+      .crop-box::before { border-inline: 1px solid rgba(255, 255, 255, 0.35); margin-inline: 33.33%; }
+      .crop-box::after { border-block: 1px solid rgba(255, 255, 255, 0.35); margin-block: 16.67%; }
+      .crop-handle { position: absolute; right: -8px; bottom: -8px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); cursor: nwse-resize; }
+      .crop-bar { display: flex; align-items: center; gap: 12px; margin-top: 8px; font-size: 13px; opacity: 0.8; }
+      .crop-bar button { font: inherit; padding: 2px 10px; cursor: pointer; }
+      .crop-empty { font-size: 14px; opacity: 0.7; }
     </style>
   </head>
   <body>
@@ -139,7 +153,13 @@
                 const cover = get('cover');
                 if (!cover) return null;
                 const asset = getAsset(String(cover).replace(/^\.\//, ''));
-                return h('img', { className: 'cover', src: (asset && asset.url) || cover, alt: get('coverAlt') || '' });
+                // Same 2:1 frame as src/components/Cover.astro. With no crop set, fill it from the centre.
+                const [x, y, w] = String(get('coverCrop') || '').trim().split(/\s+/).map((n) => Number(n) / 100);
+                const style = w > 0
+                  ? { '--x': x || 0, '--y': y || 0, '--w': w }
+                  : { width: '100%', height: '100%', objectFit: 'cover', transform: 'none' };
+                return h('div', { className: 'cover cover-frame' },
+                  h('img', { src: (asset && asset.url) || cover, alt: get('coverAlt') || '', style }));
               })(),
               h('header', {},
                 h('p', { className: 'eyebrow' },
@@ -163,6 +183,92 @@
 
       CMS.registerPreviewTemplate('notes', PostPreview('notes'));
       CMS.registerPreviewTemplate('bench', PostPreview('bench'));
+
+      // ---------- "Card picture crop" field ----------
+      // Shows the card picture with a 2:1 box on it. Drag the box to move it, drag
+      // its corner to make it smaller (zoom in) or bigger. Saved as "x y w" in %
+      // (see src/components/Cover.astro). "Use centre" clears it.
+      const CoverCrop = createClass({
+        getInitialState() {
+          return { src: '', ratio: 0, crop: null };
+        },
+        componentDidMount() {
+          // The picture itself belongs to the Card picture field; borrow the one it shows.
+          this.timer = setInterval(() => {
+            const img = document.querySelector('.pane[data-mode="edit"] .field[data-key-path="cover"] img');
+            const src = img ? img.src : '';
+            if (src !== this.state.src) this.setState({ src, ratio: 0 });
+          }, 500);
+        },
+        componentWillUnmount() {
+          clearInterval(this.timer);
+        },
+        // Box as fractions of the photo: x, y, w (width), h (height), kept 2:1 and inside the photo.
+        box(crop) {
+          const { ratio } = this.state; // photo width / height
+          const widest = Math.min(1, 2 / ratio);
+          let { x, y, w } = crop || {};
+          if (!(w > 0)) {
+            const [px, py, pw] = String(this.props.value || '').trim().split(/\s+/).map((n) => Number(n) / 100);
+            if (pw > 0) ({ x, y, w } = { x: px, y: py, w: pw });
+          }
+          w = w > 0 ? Math.min(Math.max(w, 0.1 * widest), widest) : widest;
+          const h = (w * ratio) / 2;
+          const clamp = (v, max) => (Number.isFinite(v) ? Math.min(Math.max(v, 0), max) : max / 2);
+          return { x: clamp(x, 1 - w), y: clamp(y, 1 - h), w, h };
+        },
+        start(e, mode) {
+          e.preventDefault();
+          e.stopPropagation();
+          const rect = this.stage.getBoundingClientRect();
+          const from = this.box(this.state.crop);
+          const x0 = e.clientX, y0 = e.clientY;
+          const move = (ev) => {
+            const dx = (ev.clientX - x0) / rect.width;
+            const dy = (ev.clientY - y0) / rect.height;
+            const crop = mode === 'move'
+              ? { x: from.x + dx, y: from.y + dy, w: from.w }
+              // Resize from the bottom-right corner, keeping the top-left corner fixed.
+              : { x: from.x, y: from.y, w: Math.min(from.w + Math.max(dx, (dy * from.w) / from.h), 1 - from.x, ((1 - from.y) * 2) / this.state.ratio) };
+            this.setState({ crop: this.box(crop) });
+          };
+          const up = () => {
+            window.removeEventListener('pointermove', move);
+            window.removeEventListener('pointerup', up);
+            const { x, y, w } = this.box(this.state.crop);
+            const pct = (v) => String(Math.round(v * 1000) / 10);
+            this.props.onChange(`${pct(x)} ${pct(y)} ${pct(w)}`);
+          };
+          window.addEventListener('pointermove', move);
+          window.addEventListener('pointerup', up);
+        },
+        render() {
+          const { src, ratio } = this.state;
+          if (!src) return h('p', { className: 'crop-empty' }, 'Add a card picture first.');
+          const b = ratio ? this.box(this.state.crop) : null;
+          const pct = (v) => `${v * 100}%`;
+          return h('div', { className: 'crop-tool' },
+            h('div', { className: 'crop-stage', ref: (el) => { this.stage = el; } },
+              h('img', {
+                src,
+                alt: '',
+                onLoad: (e) => this.setState({ ratio: e.target.naturalWidth / e.target.naturalHeight, crop: null }),
+              }),
+              b && h('div', {
+                className: 'crop-box',
+                style: { left: pct(b.x), top: pct(b.y), width: pct(b.w), height: pct(b.h) },
+                onPointerDown: (e) => this.start(e, 'move'),
+              }, h('div', { className: 'crop-handle', onPointerDown: (e) => this.start(e, 'resize') }))),
+            h('div', { className: 'crop-bar' },
+              h('span', {}, this.props.value ? 'Custom crop' : 'Centred (no crop set)'),
+              h('button', {
+                type: 'button',
+                disabled: !this.props.value,
+                onClick: () => { this.setState({ crop: null }); this.props.onChange(''); },
+              }, 'Use centre')));
+        },
+      });
+      CMS.registerWidget('cover-crop', CoverCrop);
 
       // ---------- Details / Body switch ----------
       // Adds two buttons next to "Edit". "Body" hides the set-and-forget fields

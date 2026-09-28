@@ -18,6 +18,10 @@ const schema = ({ image }: SchemaContext) =>
     // Optional picture for the Recent writing card (a file next to the post).
     cover: image().optional(),
     coverAlt: z.string().default(''),
+    // Which 2:1 part of the cover to show, set with the editor's crop tool:
+    // "x y w" = left edge, top edge (% of the photo's width / height) and width (% of its width).
+    // Without it, the largest 2:1 part from the centre is used.
+    coverCrop: z.string().regex(/^\s*[\d.]+\s+[\d.]+\s+[\d.]+\s*$/, 'coverCrop must be "x y w" in %').optional(),
     // Optional: posts with the same series name are grouped together, e.g.
     //   series: Building a tuneable load
     //   part: 2

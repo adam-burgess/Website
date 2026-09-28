@@ -1,0 +1,54 @@
+---
+// A post's cover picture in a 2:1 frame (post page, home-page card, section list).
+// Shows the part of the photo chosen with the editor's "Card picture crop" tool,
+// stored in the post's frontmatter as `coverCrop: "x y w"`:
+//   x, y = top-left corner of the 2:1 box, as % of the photo's width and height
+//   w    = width of the box, as % of the photo's width
+// With no crop, the box is as big as it can be and centred.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt?: string;
+  crop?: string;
+  // Widths the FRAME is shown at (px). They're scaled up here so a zoomed-in crop stays sharp.
+  widths: number[];
+  // The frame's `sizes`, when there's more than one width.
+  sizes?: string;
+  loading?: 'eager' | 'lazy';
+  class?: string;
+}
+
+const { src, alt = '', crop, widths, sizes, loading, class: className } = Astro.props;
+
+// Work out the box as fractions of the photo, keeping it 2:1 and inside the photo.
+const aspect = src.width / src.height;
+const widest = Math.min(1, 2 / aspect);
+const [cx, cy, cw] = (crop ?? '').trim().split(/\s+/).map((n) => Number(n) / 100);
+const w = cw > 0 ? Math.min(cw, widest) : widest;
+const h = (w * aspect) / 2;
+const clamp = (v: number, max: number, fallback: number) =>
+  Number.isFinite(v) ? Math.min(Math.max(v, 0), max) : fallback;
+const x = clamp(cx, 1 - w, (1 - w) / 2);
+const y = clamp(cy, 1 - h, (1 - h) / 2);
+
+// The photo is drawn 1/w times wider than the frame, so ask Astro for bigger files
+// (never bigger than the original).
+const scale = (px: number) => Math.min(Math.round(px / w), src.width);
+const scaledWidths = [...new Set(widths.map(scale))];
+// "(max-width: 1000px) 100vw, 1000px" -> each size multiplied by 1/w.
+const scaledSizes = sizes
+  ?.split(',')
+  .map((part) => {
+    const i = part.lastIndexOf(')') + 1;
+    return `${part.slice(0, i)} calc(${part.slice(i).trim()} * ${(1 / w).toFixed(4)})`.trim();
+  })
+  .join(', ');
+const style = `--x:${x.toFixed(4)};--y:${y.toFixed(4)};--w:${w.toFixed(4)}`;
+---
+<div class:list={['cover-frame', className]}>
+  {scaledWidths.length > 1
+    ? <Image src={src} alt={alt} widths={scaledWidths} sizes={scaledSizes} loading={loading} style={style} />
+    : <Image src={src} alt={alt} width={scaledWidths[0]} loading={loading} style={style} />}
+</div>

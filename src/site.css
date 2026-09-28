@@ -107,11 +107,20 @@ a { color: var(--accent); }
 
 .piece .prose { margin-top: 36px; }
 
+/* Cover picture frame (src/components/Cover.astro): a 2:1 window onto the photo.
+   --x, --y = top-left of the chosen part, --w = its width, all as fractions of the photo.
+   The photo is drawn 1/w times the frame's width, then slid left and up into place. */
+.cover-frame { position: relative; overflow: hidden; aspect-ratio: 2 / 1; }
+.cover-frame img {
+  position: absolute; left: 0; top: 0;
+  display: block; max-width: none; height: auto;
+  width: calc(100% / var(--w, 1));
+  transform: translate(calc(var(--x, 0) * -100%), calc(var(--y, 0) * -100%));
+}
+
 /* Cover picture at the very top of a post, above the title: 2:1, a little wider than the text column. */
 .piece .cover {
-  display: block;
   width: 100%; max-width: calc(var(--measure) + 160px);
-  height: auto; aspect-ratio: 2 / 1; object-fit: cover;
   margin: 0 auto 36px;
   border-radius: 6px;
   border: 1px solid var(--hairline);
