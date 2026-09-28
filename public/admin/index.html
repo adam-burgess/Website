@@ -270,6 +270,19 @@
       });
       CMS.registerWidget('cover-crop', CoverCrop);
 
+      // ---------- Spellcheck ----------
+      // Red underlines under misspelt words in every text box, in Australian English.
+      // Sveltia resets the page's language to plain "en", so each box gets "en-AU" itself.
+      // The Maths block's LaTeX box is left unchecked: it isn't words.
+      new MutationObserver(() => {
+        document
+          .querySelectorAll('.pane[data-mode="edit"] :is(input:is([type="text"], :not([type])), textarea, [contenteditable="true"]):not([spellcheck])')
+          .forEach((box) => {
+            box.spellcheck = !box.closest('[data-key-path="latex"]');
+            box.lang = 'en-AU';
+          });
+      }).observe(document.body, { childList: true, subtree: true });
+
       // ---------- Details / Body switch ----------
       // Adds two buttons next to "Edit". "Body" hides the set-and-forget fields
       // so the body fills the window. The choice is remembered in this browser.
