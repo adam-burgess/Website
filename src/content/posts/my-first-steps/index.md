@@ -1,4 +1,5 @@
 ---
+section: notes
 title: My first Oscilloscope!
 description: I bought an oscilloscope 🙌🙌
 date: 2026-09-28
