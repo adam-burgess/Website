@@ -24,7 +24,7 @@ const recent = (await getAllPosts()).slice(0, 6).map((post) => ({
   cover: post.data.cover,
   coverAlt: post.data.coverAlt,
   coverCrop: post.data.coverCrop,
-  label: SECTIONS[post.collection].single,
+  label: SECTIONS[post.data.section].single,
 }));
 
 // The two links at the bottom of the page. Their text comes from SECTIONS in src/posts.ts.
