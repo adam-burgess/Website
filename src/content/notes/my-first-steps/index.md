@@ -14,6 +14,6 @@ I'm not necessarily used to writing, it feels a bit unnatural to me, however, th
 
 I thought my first post is as good as any to talk why I really took project this upon myself. To start building a home lab. I must confess I have wanted to do this for quite some time. 
 
-I can think back to high school, I was lucky enough to attend a school that offered an Engineering ATAR course. This sparked me with passion, or at least the most I could muster up as video game addicted 17 year old. I remember telling myself that I was going to build a home lab, I _had_ to. Surprisingly, nothing happened. 
+I can think back to high school, I was lucky enough to attend a school that offered an Engineering ATAR course. This sparked me with passion, or at least the most I could muster up as video game addicted 17 year old. I remember telling myself that I was going to build a home lab, I _had_ to. Not surprisingly, nothing happened. 
 
 Again, a couple of years into my degree (I cant recall if it was second or third year), I had the urge again. This time though I'm not sure the urge was one born out of desire or a symptom of my insecurity. It may seem random that insecurity would have me want to build a home lab but I wanted to get my life together, and '_locking in'_  on the engineering hustle seemed to be the path. I did not lock in, at least not in a heartbeat as I had hoped. Again, nothing happened.
